@@ -1,5 +1,7 @@
 {
   "java.project.sourcePaths": [
-    "src/2.算法改变/src"
+    "src/3.动态数组/src",
+    "src/2.算法改变/src",
+    "src/1.环境搭建/java/环境搭建"
   ]
 }
