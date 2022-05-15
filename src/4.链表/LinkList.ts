@@ -1,19 +1,16 @@
 import { AbstractList } from './AbstractList';
 
 class Node<T>{
-  constructor(public element: T, public next: Node<T> | null) { }
+  constructor(public element: T, public next: Node<T> | undefined) { }
 }
 export class LinkList<T> extends AbstractList<T> {
 
 
-  first!: Node<T> | null;
+  first!: Node<T> | undefined;
 
-  constructor() {
-    super()
-  }
   clear(): void {
     this.size = 0;
-    this.first = null;
+    this.first = undefined;
   }
 
   add(...args: [obj: T] | [index: number, obj: T]): void {
@@ -21,10 +18,10 @@ export class LinkList<T> extends AbstractList<T> {
     if (args.length === 1) {
       let element = args[0]
       if (this.first === undefined) {
-        this.first = new Node(element, null);
+        this.first = new Node(element, undefined);
       } else {
         let node = this.findNode(this.size - 1)
-        node.next = new Node(element, null);
+        node.next = new Node(element, undefined);
       }
     } else {
       let index = args[0];
@@ -66,21 +63,42 @@ export class LinkList<T> extends AbstractList<T> {
     node.element = obj;
     return old;
   }
-  remove(i: number): void {
-    throw new Error('Method not implemented.');
+  remove(i: number): T {
+    let preNode = this.first;
+    if (i === 0) {
+      this.first = preNode?.next;
+    } else {
+      let preNode = this.findNode(i - 1)
+      preNode.next = preNode.next?.next;
+    }
+    this.size--;
+    return (preNode as Node<T>).element;
+
   }
   indexOf(Obj: T): number {
-    throw new Error('Method not implemented.');
+    let node = this.first;
+    for (let i = 0; i < this.size; i++) {
+      if (node?.element === Obj) {
+        return i
+      }
+    }
+    return LinkList.ELEMENT_NOT_FOUND;
+  }
+  toString() {
+    return JSON.stringify(this.first)
   }
 
 }
 
 let link = new LinkList();
 
-link.add(1)
-link.add(2)
-link.add(1, 3)
-link.add(0, 4)
+link.add(1);
+link.add(2);
+link.add(1, 3);
+link.add(0, 4);
+console.log(link.toString())
+link.remove(1);
 
-console.log(JSON.stringify(link.first))
+
+console.log(link.toString())
 

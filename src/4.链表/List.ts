@@ -5,6 +5,6 @@ export interface List<T> {
   isEmpty(): boolean;
   contains(obj: T): boolean;
   add(...args: [obj: T] | [index: number, obj: T]): void;
-  remove(i: number): void;
+  remove(i: number): T;
   indexOf(Obj: T): number
 }

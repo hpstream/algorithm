@@ -27,7 +27,7 @@ export abstract class AbstractList<T> implements List<T> {
   abstract add(...args: [obj: T] | [index: number, obj: T]): void;
   abstract get(i: number): T;
   abstract set(i: number, obj: T): T;
-  abstract remove(i: number): void;
+  abstract remove(i: number): T;
   abstract indexOf(Obj: T): number
 
 }

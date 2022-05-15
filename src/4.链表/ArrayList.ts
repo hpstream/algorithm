@@ -1,5 +1,4 @@
 import { AbstractList } from './AbstractList';
-import { List } from './List';
 
 
 export class ArrayList<T> extends AbstractList<T>{
@@ -9,9 +8,7 @@ export class ArrayList<T> extends AbstractList<T>{
   clear(): void {
     throw new Error('Method not implemented.');
   }
-  get size(): number {
-    throw new Error('Method not implemented.');
-  }
+
   isEmpty(): boolean {
     throw new Error('Method not implemented.');
   }
@@ -29,7 +26,7 @@ export class ArrayList<T> extends AbstractList<T>{
   set(i: number, obj: T): T {
     throw new Error('Method not implemented.');
   }
-  remove(i: number): void {
+  remove(i: number): T {
     throw new Error('Method not implemented.');
   }
   indexOf(Obj: T): number {
