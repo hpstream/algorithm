@@ -17,7 +17,7 @@ export class Node<T> {
 
 
 export class BinarySearchTree<T extends number | Comparator<T>> {
-  private root!: Node<T> | null;
+  public root!: Node<T> | null;
   private _size: number = 0;
   // public comparator!: (a: T | number, b: T | number) => | number;
 
@@ -51,6 +51,7 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
         } else if (cmp < 0) {
           node = node.left;
         } else {
+          node.element = e;
           return
         }
       }
@@ -94,6 +95,72 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
       throw new Error("element must not be null or undefined");
     }
   }
+  preOrderTraversalCurrentNode() {
+    this.preOrderTraversal(this.root, (node) => {
+      console.log(node.element)
+    });
+  }
+
+  preOrderTraversal(node?: Node<T> | null, cb?: (node: Node<T>) => void) {
+    if (node) {
+      cb && cb(node)
+      node.left && this.preOrderTraversal(node.left, cb);
+      node.right && this.preOrderTraversal(node.right, cb);
+    }
+  }
+
+  inOrderTraversalCurrentNode() {
+    this.inOrderTraversal(this.root, (node) => {
+      console.log(node.element)
+    });
+  }
+
+  inOrderTraversal(node: Node<T> | null, cb?: (node: Node<T>) => void) {
+    if (node) {
+
+      node.left && this.inOrderTraversal(node.left, cb);
+      cb && cb(node)
+      node.right && this.inOrderTraversal(node.right, cb);
+    }
+  }
+
+  postOrderTraversalCurrentNode() {
+    this.postOrderTraversal(this.root, (node) => {
+      console.log(node.element)
+    });
+  }
+
+  postOrderTraversal(node: Node<T> | null, cb?: (node: Node<T>) => void) {
+    if (node) {
+
+      node.left && this.postOrderTraversal(node.left, cb);
+      node.right && this.postOrderTraversal(node.right, cb);
+      cb && cb(node)
+    }
+  }
+  levelOrderTraversalCurrentNode() {
+    this.levelOrderTraversal(this.root, (node) => {
+      console.log(node.element)
+    })
+  }
+  levelOrderTraversal(node: Node<T> | null, cb?: (node: Node<T>) => void) {
+    if (node) {
+      let arr: Node<T>[] = [node];
+      let i = 0;
+
+      while (arr[i]) {
+        cb && cb(node);
+        arr[i].left && arr.push(arr[i].left as Node<T>)
+        arr[i].right && arr.push(arr[i].right as Node<T>)
+        i++;
+      }
+    }
+
+
+
+
+  }
+
   toString() {
     // ┌───381────┐         
     //   │          │               
@@ -104,9 +171,7 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
     // 35 ┌─190 ┌─476 ┌─760─┐
     //      │     │     │     │
     // 146   445   600   800
-    return `
- 
-`
+    return ``
   }
 }
 
@@ -118,6 +183,8 @@ for (let i = 0; i < data.length; i++) {
   bst.add(data[i])
 }
 
-console.log(bst.toString())
+// console.log(bst.root?.left)
+
+bst.inOrderTraversalCurrentNode()
 
 // s.add(p)
