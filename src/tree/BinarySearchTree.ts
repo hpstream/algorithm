@@ -160,22 +160,28 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
 
 
   }
+  print(node: Node<T> | null, sb: {
+    value: string;
+  }, s: string) {
 
+    if (node) {
+      sb.value += `${s}${node.element}\n`;
+      node.left && this.print(node.left, sb, s + '    ');
+
+      node.right && this.print(node.right, sb, s + '    ');
+
+    }
+  }
   toString() {
-    // ┌───381────┐         
-    //   │          │               
-    // ┌─12─┐     ┌─410─┐
-    // │    │     │     │
-    // 9  ┌─40─┐ 394 ┌─540─┐
-    //    │    │     │     │
-    // 35 ┌─190 ┌─476 ┌─760─┐
-    //      │     │     │     │
-    // 146   445   600   800
-    return ``
+    let str = {
+      value: ''
+    };
+    this.print(this.root, str, '')
+    return str.value
   }
 }
 
-let data = [7, 4, 9, 2, 5, 8, 11, 3]
+let data = [7, 4, 2, 1, 3, 5, 9, 8, 11, 10, 12]
 
 var bst = new BinarySearchTree<number>();
 
@@ -185,6 +191,7 @@ for (let i = 0; i < data.length; i++) {
 
 // console.log(bst.root?.left)
 
-bst.inOrderTraversalCurrentNode()
+// bst.inOrderTraversalCurrentNode()
+console.log(bst.toString())
 
 // s.add(p)
