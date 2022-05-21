@@ -214,16 +214,13 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
     let leaf = false;
     while (arr[i]) {
       if (leaf && !arr[i].isLeaf()) return false;
-      if (arr[i].hasTwoChildren()) {
-        arr.push(arr[i].left as Node<T>);
-        arr.push(arr[i].right as Node<T>);
-      }
+      arr[i].left && arr.push(arr[i].left as Node<T>);
+      arr[i].right && arr.push(arr[i].right as Node<T>);
+
       if (!arr[i].left && arr[i].right) {
         return false;
       }
-
       if (arr[i].left && !arr[i].right) {
-        arr.push(arr[i].left as Node<T>);
         leaf = true;
       }
       i++;
