@@ -223,6 +223,7 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
       }
 
       if (arr[i].left && !arr[i].right) {
+        arr.push(arr[i].left as Node<T>);
         leaf = true;
       }
       i++;
