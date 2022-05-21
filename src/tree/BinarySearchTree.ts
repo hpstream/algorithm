@@ -113,7 +113,7 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
     });
   }
 
-  inOrderTraversal(node: Node<T> | null, cb?: (node: Node<T>) => void) {
+  inOrderTraversal(node?: Node<T> | null, cb?: (node: Node<T>) => void) {
     if (node) {
       node.left && this.inOrderTraversal(node.left, cb);
       cb && cb(node);
