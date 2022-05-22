@@ -31,8 +31,11 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
     this.root = null;
   }
 
-  size() {
+  get size() {
     return this._size;
+  }
+  set size(val) {
+    this._size = val;
   }
   isEmpty() {
     return this._size == 0;
@@ -84,9 +87,99 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
       throw new Error("类型不符合规范");
     }
   }
-  remove(e: T) {}
 
-  contains(e: T) {}
+  public remove(node: Node<T>): Node<T>;
+  public remove(e: T): Node<T>;
+  public remove(node: Node<T> | T | null): Node<T> | undefined {
+    if (node === null) return;
+    if (node instanceof Node) {
+      // 度为2，怎么删除；
+      this._size--;
+      if (node.hasTwoChildren()) {
+        let s = this.successor(node);
+        if (s) {
+          node.element = s.element;
+          node = s;
+        }
+      }
+      // 删除node节点, 度为0或1；
+      let replacement = node.left ? node.left : node.right;
+      console.log(replacement?.element);
+      if (replacement) {
+        // 更改parent
+        replacement.parent = node.parent;
+        if (node.parent) {
+          if (node.parent.left === node) {
+            node.parent.left = replacement;
+          } else {
+            node.parent.right = replacement;
+          }
+        } else {
+          this.root = replacement;
+        }
+      } else {
+        // 度为0的节点
+        if (node.parent) {
+          if (node.parent.left === node) {
+            node.parent.left = null;
+          } else {
+            node.parent.right = null;
+          }
+        } else {
+          this.root = null;
+        }
+      }
+    } else {
+      let targeNode = this.findNode(node);
+      targeNode && this.remove(targeNode);
+    }
+  }
+  //后继节点
+  successor(node: Node<T> | null) {
+    if (node === null || !node.right) return null;
+    let current: Node<T> = node.right;
+    while (current) {
+      if (current.left) {
+        current = current.left;
+      } else {
+        return current;
+      }
+    }
+  }
+  // 前驱节点
+  predecessor(node: Node<T> | null) {
+    if (node === null || !node.left) return null;
+    let current: Node<T> = node.left;
+    while (current) {
+      if (current.right) {
+        current = current.right;
+      } else {
+        return current;
+      }
+    }
+  }
+
+  private findNode(e: T): Node<T> | null {
+    let node = this.root;
+
+    while (node) {
+      let val = this.compare(e, node.element);
+      if (val === 0) return node;
+      if (val > 0) {
+        node = node.right;
+      } else if (val < 0) {
+        node = node.left;
+      }
+    }
+    return node;
+  }
+  clear() {
+    this.root = null;
+  }
+
+  contains(e: T) {
+    return !!this.findNode(e);
+  }
 
   private elementNotNullCheck(e: T) {
     if (e === null || e === undefined) {
@@ -160,10 +253,11 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
     s: string
   ) {
     if (node) {
-      sb.value += `${s}${node.element}\n`;
-      node.left && this.print(node.left, sb, s + "    ");
-
-      node.right && this.print(node.right, sb, s + "    ");
+      node.left && this.print(node.left, sb, " ".repeat(s.length) + "|---");
+      sb.value += `${" ".repeat(Math.floor(s.length / 2))}${s}${
+        node.element
+      }\n`;
+      node.right && this.print(node.right, sb, " ".repeat(s.length) + "|---");
     }
   }
 
@@ -236,22 +330,3 @@ export class BinarySearchTree<T extends number | Comparator<T>> {
     return str.value;
   }
 }
-
-let data = [7, 4, 2, 1, 3, 5, 9, 8, 11, 10, 12];
-let levelData = [7, 4, 9, 2, 5];
-var bst = new BinarySearchTree<number>();
-
-for (let i = 0; i < levelData.length; i++) {
-  // bst.add(Math.floor(Math.random() * 1000));
-  bst.add(levelData[i]);
-}
-
-// console.log(bst.root?.left)
-
-// bst.inOrderTraversalCurrentNode()
-console.log(bst.toString());
-// console.log(bst.height(bst.root));
-// console.log(bst.height1(bst.root));
-console.log(bst.isComplete(bst.root as Node<number>));
-
-// s.add(p)
