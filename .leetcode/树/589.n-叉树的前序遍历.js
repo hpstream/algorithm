@@ -17,8 +17,20 @@
  * @param {Node|null} root
  * @return {number[]}
  */
-var preorder = function(root) {
-    
+var preorder = function (root) {
+  var arr = [];
+  preorder(root);
+  return arr;
+
+  function preorder(node) {
+
+    if (node) {
+      arr.push(node.val);
+      node.children.forEach(n => {
+        preorder(n)
+      });
+    }
+  }
+
 };
 // @lc code=end
-
