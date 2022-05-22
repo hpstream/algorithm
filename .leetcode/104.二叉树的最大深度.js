@@ -17,8 +17,28 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var maxDepth = function(root) {
+var maxDepth = function (root) {
+  if (root) {
+    let deep = 0;
+    let nodeList = [root];
+    let levelRow = nodeList.length;
 
+    while (nodeList.length > 0) {
+      let node = nodeList.shift();
+
+      node.left && nodeList.push(node.left);
+      node.right && nodeList.push(node.right)
+
+      levelRow--;
+      if (levelRow === 0) {
+        levelRow = nodeList.length;
+        deep++;
+      }
+    }
+
+    return deep;
+  } else {
+    return 0
+  }
 };
 // @lc code=end
-
