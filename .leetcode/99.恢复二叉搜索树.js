@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode.cn id=114 lang=javascript
+ * @lc app=leetcode.cn id=99 lang=javascript
  *
- * [114] 二叉树展开为链表
+ * [99] 恢复二叉搜索树
  */
 
 // @lc code=start
@@ -17,7 +17,7 @@
  * @param {TreeNode} root
  * @return {void} Do not return anything, modify root in-place instead.
  */
-var flatten = function(root) {
+var recoverTree = function(root) {
 
 };
 // @lc code=end
