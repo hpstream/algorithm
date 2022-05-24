@@ -1,4 +1,5 @@
-import {BinaryTree, Comparator, Node} from "./BinaryTree";
+import {BinaryTree, Comparator} from "./BinaryTree";
+import {Node} from "./Node";
 
 export class BST<T> extends BinaryTree<T> {
   constructor(

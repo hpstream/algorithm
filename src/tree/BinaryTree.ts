@@ -1,17 +1,5 @@
-export class Node<T> {
-  // element?: T;
-  left?: Node<T>;
-  right?: Node<T>;
-  // parent?: Node<T>;
-  constructor(public element: T, public parent?: Node<T>) {}
+import {Node} from "./Node";
 
-  isLeaf() {
-    return !this.left && !this.right;
-  }
-  hasTwoChildren() {
-    return this.left && this.right;
-  }
-}
 export interface Comparator<T> {
   compare?(e2: T): number;
 }
