@@ -15,8 +15,9 @@ export class BST<T> extends BinaryTree<T> {
     this.elementNotNullCheck(e);
 
     if (!this.root) {
-      this.root = new Node(e);
+      this.root = this.createNode(e);
       this.size++;
+      this.afterAdd(this.root);
     } else {
       let node: Node<T> | undefined = this.root;
       let parent!: Node<T>;
@@ -33,15 +34,20 @@ export class BST<T> extends BinaryTree<T> {
           return;
         }
       }
-      let newNode = new Node(e, parent);
+      let newNode = this.createNode(e, parent);
       // console.log(parent)
       if (cmp > 0) {
         parent.right = newNode;
       } else {
         parent.left = newNode;
       }
+      this.afterAdd(newNode);
       this.size++;
     }
+  }
+  protected afterAdd(node: Node<T>) {}
+  protected createNode(e: T, parent?: Node<T>) {
+    return new Node(e, parent);
   }
 
   public remove(node: Node<T>): Node<T>;

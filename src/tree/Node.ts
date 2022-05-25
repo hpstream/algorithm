@@ -11,7 +11,11 @@ export class Node<T> {
   hasTwoChildren() {
     return this.left && this.right;
   }
-  // 左旋转，单旋 LL
-  // 右旋转，单旋 RR
-  //
+
+  isLeftChild() {
+    return this.parent && this === this.parent?.left;
+  }
+  isRightChild() {
+    return this.parent && this === this.parent?.right;
+  }
 }
