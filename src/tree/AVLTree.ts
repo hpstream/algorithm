@@ -66,8 +66,10 @@ export class AVLTree<T> extends BST<T> {
     return;
   }
   private rebalance(grandNode: Node<T>) {
-    // 进来代表第一个发现不平衡节点
+    // 得到第一个不平衡节点
+    // 找出不平衡节点的子节点
     let parent = (grandNode as AVLNode<T>).tallerChild();
+    // 找出不平衡节点的孙子节点
     let child = (parent as AVLNode<T>).tallerChild();
   }
 }
