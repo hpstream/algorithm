@@ -46,6 +46,7 @@ export class BST<T> extends BinaryTree<T> {
     }
   }
   protected afterAdd(node: Node<T>) {}
+  protected afterRemove(node: Node<T>) {}
   protected createNode(e: T, parent?: Node<T>) {
     return new Node(e, parent);
   }
@@ -92,6 +93,8 @@ export class BST<T> extends BinaryTree<T> {
           this.root = undefined;
         }
       }
+      // 真正被删除的节点
+      this.afterRemove(node);
     } else {
       let targeNode = this.findNode(node);
       targeNode && this.remove(targeNode);

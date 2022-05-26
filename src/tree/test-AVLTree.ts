@@ -11,4 +11,20 @@ function test1() {
   // console.log(avl.root?.height);
   console.log(avl.toString());
 }
-test1();
+// test1();
+
+function test2() {
+  let avl = new AVLTree();
+  let arr = [85, 19, 69, 3, 7, 99, 95];
+  for (let i = 0; i < arr.length; i++) {
+    avl.add(arr[i]);
+  }
+  // console.log(avl.root?.height);
+  // console.log(avl.toString());
+  avl.remove(99);
+  avl.remove(85);
+  avl.remove(95);
+  console.log(avl.toString());
+}
+// test1();
+test2();
