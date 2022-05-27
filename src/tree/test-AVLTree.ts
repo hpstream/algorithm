@@ -1,4 +1,5 @@
 import {AVLTree} from "./AVLTree";
+import {BST} from "./BST";
 
 function test1() {
   let avl = new AVLTree();
@@ -26,5 +27,49 @@ function test2() {
   avl.remove(95);
   console.log(avl.toString());
 }
+function test3() {
+  let arr = [];
+  let avl = new AVLTree();
+  let bst = new BST();
+  let max = 40000;
+
+  for (let i = 0; i < max; i++) {
+    arr.push(i + 1);
+    // arr.push(Math.floor(Math.random() * max));
+  }
+  // console.log(arr);
+
+  var start = new Date().getTime();
+  for (let i = 0; i < arr.length; i++) {
+    bst.add(arr[i]);
+  }
+  for (let i = 0; i < arr.length; i++) {
+    bst.contains(arr[i]);
+  }
+  for (let i = 0; i < arr.length; i++) {
+    bst.remove(arr[i]);
+  }
+  // console.log(bst.height());
+  var end = new Date().getTime();
+  console.log((end - start) / 1000);
+  start = new Date().getTime();
+  for (let i = 0; i < arr.length; i++) {
+    avl.add(arr[i]);
+  }
+  for (let i = 0; i < arr.length; i++) {
+    avl.contains(arr[i]);
+  }
+  for (let i = 0; i < arr.length; i++) {
+    avl.remove(arr[i]);
+  }
+  // console.log(avl.height());
+  var end = new Date().getTime();
+  console.log((end - start) / 1000);
+
+  // console.log(avl.root?.height);
+
+  // console.log(avl.toString());
+}
 // test1();
-test2();
+// test2();
+test3();
