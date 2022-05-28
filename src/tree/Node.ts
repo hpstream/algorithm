@@ -18,4 +18,15 @@ export class Node<T> {
   isRightChild() {
     return this.parent && this === this.parent?.right;
   }
+  sibling() {
+    if (this.isLeftChild()) {
+      return this.parent?.right;
+    }
+    if (this.isRightChild()) {
+      return this.parent?.left;
+    }
+    this.parent?.sibling();
+
+    return null;
+  }
 }
