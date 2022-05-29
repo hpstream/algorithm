@@ -25,8 +25,8 @@ export class Node<T> {
     if (this.isRightChild()) {
       return this.parent?.left;
     }
-    this.parent?.sibling();
+    // this.parent?.sibling();
 
-    return null;
+    return;
   }
 }

@@ -1,3 +1,4 @@
+import {BBST} from "./BBST";
 import {Comparator} from "./BinaryTree";
 import {BST} from "./BST";
 import {Node} from "./Node";
@@ -30,7 +31,7 @@ class AVLNode<T> extends Node<T> {
     }
   }
 }
-export class AVLTree<T> extends BST<T> {
+export class AVLTree<T> extends BBST<T> {
   public root?: AVLNode<T>;
 
   constructor(
@@ -80,6 +81,27 @@ export class AVLTree<T> extends BST<T> {
         this.rebalance(node);
       }
     }
+  }
+  rotate(
+    r: Node<T>,
+    a: Node<T> | undefined,
+    b: Node<T>,
+    c: Node<T> | undefined,
+    d: Node<T>,
+    e: Node<T> | undefined,
+    f: Node<T>,
+    g: Node<T> | undefined
+  ): void {
+    super.rotate(r, a, b, c, d, r, f, g);
+    this.updateHeight(b);
+    this.updateHeight(f);
+    this.updateHeight(d);
+  }
+  afterRotate(grand: AVLNode<T>, parent: AVLNode<T>, child?: AVLNode<T>) {
+    super.afterRotate(grand, parent, child);
+    // 更新高度
+    this.updateHeight(grand);
+    this.updateHeight(parent);
   }
 
   private rebalance(grandNode: Node<T>) {
@@ -143,61 +165,7 @@ export class AVLTree<T> extends BST<T> {
       }
     }
   }
-  rotate(
-    r: Node<T>, // 根节点
-    a: Node<T> | undefined,
-    b: Node<T>, // 儿
-    c: Node<T> | undefined,
-    d: Node<T>, // 父
-    e: Node<T> | undefined,
-    f: Node<T>, // 祖
-    g: Node<T> | undefined
-  ) {
-    // 让d成为子树的根节点
-    d.parent = r.parent;
-    if (r.parent) {
-      if (r.isLeftChild()) {
-        r.parent.left = d;
-      } else if (r.isRightChild()) {
-        r.parent.right = d;
-      }
-    } else {
-      this.root = d as AVLNode<T>;
-    }
-    // a-b-c
-    b.left = a;
-    b.right = c;
-    if (a) {
-      a.parent = b;
-    }
-    if (c) {
-      c.parent = b;
-    }
-    this.updateHeight(b);
 
-    //e-f-g
-    f.left = e;
-    if (e) {
-      e.parent = f;
-    }
-    f.right = g;
-    if (g) {
-      g.parent = f;
-    }
-    this.updateHeight(f);
-
-    // b-d-f
-
-    d.left = b;
-    if (b) {
-      b.parent = d;
-    }
-    d.right = f;
-    if (f) {
-      f.parent = d;
-    }
-    this.updateHeight(d);
-  }
   private rebalance1(grandNode: Node<T>) {
     // 得到第一个不平衡节点
     // 找出不平衡节点的子节点
@@ -227,42 +195,7 @@ export class AVLTree<T> extends BST<T> {
       }
     }
   }
-  private rotateLeft(GRAND: Node<T>) {
-    let grand = GRAND as AVLNode<T>;
-    let parent = grand.right as AVLNode<T>;
-    let child = parent.left;
 
-    grand.right = child;
-    parent.left = grand;
-
-    this.afterRotate(grand, parent, child);
-  }
-  private rotateRight(GRAND: Node<T>) {
-    let grand = GRAND as AVLNode<T>;
-    let parent = grand.left as AVLNode<T>;
-    let child = parent.right;
-
-    grand.left = child;
-    parent.right = grand;
-    this.afterRotate(grand, parent, child);
-  }
-  afterRotate(grand: AVLNode<T>, parent: AVLNode<T>, child?: AVLNode<T>) {
-    parent.parent = grand.parent as AVLNode<T>;
-    if (grand.isLeftChild()) {
-      (grand.parent as AVLNode<T>).left = parent;
-    } else if (grand.isRightChild()) {
-      (grand.parent as AVLNode<T>).right = parent;
-    } else {
-      this.root = parent;
-    }
-    if (child) {
-      child.parent = grand;
-    }
-    grand.parent = parent;
-    // 更新高度
-    this.updateHeight(grand);
-    this.updateHeight(parent);
-  }
   print(
     node: AVLNode<T>,
     sb: {
