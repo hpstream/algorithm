@@ -46,7 +46,7 @@ export class BST<T> extends BinaryTree<T> {
     }
   }
   protected afterAdd(node: Node<T>) {}
-  protected afterRemove(node: Node<T>) {}
+  protected afterRemove(node: Node<T>, replacement?: Node<T>) {}
   protected createNode(e: T, parent?: Node<T>) {
     return new Node(e, parent);
   }
@@ -80,6 +80,8 @@ export class BST<T> extends BinaryTree<T> {
         } else {
           this.root = replacement;
         }
+        // 真正被删除的节点
+        this.afterRemove(node, replacement);
       } else {
         // 度为0的节点
         if (node.parent) {
@@ -89,12 +91,14 @@ export class BST<T> extends BinaryTree<T> {
           } else {
             parent.right = undefined;
           }
+          this.afterRemove(node, undefined);
         } else {
           this.root = undefined;
+          this.afterRemove(node, undefined);
         }
       }
       // 真正被删除的节点
-      this.afterRemove(node);
+      // this.afterRemove(node);
     } else {
       let targeNode = this.findNode(node);
       targeNode && this.remove(targeNode);
