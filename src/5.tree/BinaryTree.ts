@@ -4,7 +4,7 @@ export interface Comparator<T> {
   compare?(e2: T): number;
 }
 interface callBackNode<T> {
-  (node: Node<T>): void;
+  (node: Node<T>): void | boolean;
 }
 export class BinaryTree<T> {
   public root?: Node<T>;
