@@ -81,7 +81,8 @@ export class BST<T> extends BinaryTree<T> {
           this.root = replacement;
         }
         // 真正被删除的节点
-        this.afterRemove(node, replacement);
+        this.afterRemove(replacement);
+        // this.afterRemove(node, replacement);
       } else {
         // 度为0的节点
         if (node.parent) {

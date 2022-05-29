@@ -99,7 +99,88 @@ export class RBTree<T> extends BBST<T> {
     let cNode = node as RBNode<T>;
     return !node ? RBTree.BlACK : cNode.color;
   }
-  protected afterRemove(node: Node<T>, replacement?: Node<T>): void {
+  protected afterRemove(node: Node<T>): void {
+    let cNode = node as RBNode<T>;
+    // 如果是红色节点，直接删除
+    // if (this.isRed(cNode)) return;
+
+    // 用于取代node的子节点是红色
+    if (this.isRed(node)) {
+      this.black(node);
+      return;
+    }
+    // 删除的是根节点
+    let parent = node.parent;
+    if (!parent) return;
+
+    // 删除的是黑色叶子节点【下溢】
+    // 判断被删除的node是左还是右
+    let left = parent.left === undefined || node.isLeftChild();
+    let sibling = (left ? parent.right : parent.left) as Node<T>;
+    if (left) {
+      // 被删除的节点在左边，兄弟节点在右边
+      if (this.isRed(sibling)) {
+        // 处理红色
+        this.black(sibling);
+        this.red(parent);
+        this.rotateLeft(parent);
+        sibling = parent.right as Node<T>;
+      }
+      // 兄弟节点必然是黑色
+      if (this.isBlack(sibling.left) && this.isBlack(sibling.right)) {
+        // 兄弟节点没有一个红色子节点，父节点向下跟兄弟节点合并
+        let parentBlack = this.isBlack(parent);
+        this.black(parent);
+        this.red(sibling);
+        if (parentBlack) {
+          this.afterRemove(parent);
+        }
+      } else {
+        // 兄弟节点至少有一个红色子节点
+        // 兄弟节点左边是黑色，兄弟进行左旋转
+        if (this.isBlack(sibling.right)) {
+          this.rotateRight(sibling);
+          sibling = parent.right as Node<T>;
+        }
+        this.color(sibling, this.colorOf(parent));
+        sibling.right && this.black(sibling.right);
+        this.black(parent);
+        this.rotateLeft(parent);
+      }
+    } else {
+      // 被删除的节点在右边，兄弟节点在左边
+
+      if (this.isRed(sibling)) {
+        // 处理红色
+        this.black(sibling);
+        this.red(parent);
+        this.rotateRight(parent);
+        sibling = parent.left as Node<T>;
+      }
+      // 兄弟节点必然是黑色
+      if (this.isBlack(sibling.left) && this.isBlack(sibling.right)) {
+        // 兄弟节点没有一个红色子节点，父节点向下跟兄弟节点合并
+        let parentBlack = this.isBlack(parent);
+        this.black(parent);
+        this.red(sibling);
+        if (parentBlack) {
+          this.afterRemove1(parent, undefined);
+        }
+      } else {
+        // 兄弟节点至少有一个红色子节点
+        // 兄弟节点左边是黑色，兄弟进行左旋转
+        if (this.isBlack(sibling.left)) {
+          this.rotateLeft(sibling);
+          sibling = parent.left as Node<T>;
+        }
+        this.color(sibling, this.colorOf(parent));
+        sibling.left && this.black(sibling.left);
+        this.black(parent);
+        this.rotateRight(parent);
+      }
+    }
+  }
+  protected afterRemove1(node: Node<T>, replacement?: Node<T>): void {
     let cNode = node as RBNode<T>;
     // 如果是红色节点，直接删除
     if (this.isRed(cNode)) return;
@@ -133,7 +214,7 @@ export class RBTree<T> extends BBST<T> {
         this.black(parent);
         this.red(sibling);
         if (parentBlack) {
-          this.afterRemove(parent, undefined);
+          this.afterRemove(parent);
         }
       } else {
         // 兄弟节点至少有一个红色子节点
@@ -164,7 +245,7 @@ export class RBTree<T> extends BBST<T> {
         this.black(parent);
         this.red(sibling);
         if (parentBlack) {
-          this.afterRemove(parent, undefined);
+          this.afterRemove1(parent, undefined);
         }
       } else {
         // 兄弟节点至少有一个红色子节点
