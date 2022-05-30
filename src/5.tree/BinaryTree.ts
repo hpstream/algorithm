@@ -27,6 +27,7 @@ export class BinaryTree<T> {
   }
   clear() {
     this.root = undefined;
+    this.size = 0;
   }
   // 判断是否是一刻完全二叉树；
   isComplete(): boolean;
