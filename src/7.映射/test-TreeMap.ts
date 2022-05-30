@@ -1,4 +1,5 @@
 import {TreeMap} from "./TreeMap";
+import {TreeSet} from "./TreeSet";
 
 function test1() {
   // let data = [7, 4, 2, 1, 3, 5, 9, 8, 11, 10, 12];
@@ -19,4 +20,22 @@ function test1() {
     },
   });
 }
-test1();
+
+function test2() {
+  // let data = [7, 4, 2, 1, 3, 5, 9, 8, 11, 10, 12];
+  var map = new TreeSet<string>();
+  map.add("class");
+  map.add("public");
+  map.add("text");
+  map.add("public");
+
+  map.traversal({
+    stop: false,
+    visit(e) {
+      // console.log(e);
+      return false;
+    },
+  });
+}
+// test1();
+test2();
