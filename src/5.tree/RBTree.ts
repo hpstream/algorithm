@@ -164,7 +164,7 @@ export class RBTree<T> extends BBST<T> {
         this.black(parent);
         this.red(sibling);
         if (parentBlack) {
-          this.afterRemove1(parent, undefined);
+          this.afterRemove(parent);
         }
       } else {
         // 兄弟节点至少有一个红色子节点
@@ -214,7 +214,7 @@ export class RBTree<T> extends BBST<T> {
         this.black(parent);
         this.red(sibling);
         if (parentBlack) {
-          this.afterRemove(parent);
+          this.afterRemove1(parent);
         }
       } else {
         // 兄弟节点至少有一个红色子节点

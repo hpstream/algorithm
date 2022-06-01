@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/hpstream/algorithm/issues"
   },
-  "homepage": "https://github.com/hpstream/algorithm#readme"
+  "homepage": "https://github.com/hpstream/algorithm#readme",
+  "dependencies": {
+    "@types/lodash.isequal": "^4.5.6",
+    "lodash.isequal": "^4.5.0"
+  }
 }

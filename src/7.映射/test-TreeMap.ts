@@ -12,13 +12,15 @@ function test1() {
   map.put("text", 7);
   map.put("public", 8);
 
-  map.traverasal({
-    stop: false,
-    visitor(k, v) {
-      console.log(k, v);
-      return false;
-    },
-  });
+  console.log(map.remove("public"));
+
+  // map.traverasal({
+  //   stop: false,
+  //   visitor(k, v) {
+  //     console.log(k, v);
+  //     return false;
+  //   },
+  // });
 }
 
 function test2() {
@@ -32,10 +34,10 @@ function test2() {
   map.traversal({
     stop: false,
     visit(e) {
-      // console.log(e);
+      console.log(e);
       return false;
     },
   });
 }
-// test1();
-test2();
+test1();
+// test2();

@@ -1,12 +1,34 @@
 import {Map, Visitor} from "../7.映射/Map";
+import {isEqual} from "lodash";
+
+function hashCode(tem: any) {
+  let str = JSON.stringify(tem);
+  let hash = 0,
+    i,
+    chr,
+    len;
+  if (str.length === 0) return hash;
+  for (i = 0, len = str.length; i < len; i++) {
+    chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+}
+function isNullorUndefined(s: any) {
+  return s === undefined || s === null;
+}
 export class Node<K, V> {
   // key: K;
   // value: V;
+  hash!: number;
   color: boolean = true;
   left?: Node<K, V>;
   right?: Node<K, V>;
   // parent?: Node<K, V>;
-  constructor(public key: K, public value: V, public parent?: Node<K, V>) {}
+  constructor(public key: K, public value: V, public parent?: Node<K, V>) {
+    this.hash = isNullorUndefined(key) ? 0 : hashCode(key);
+  }
 
   isLeaf() {
     return !this.left && !this.right;
@@ -38,14 +60,14 @@ export class HashMap<K, V> implements Map<K, V> {
   static RED = true;
   static BlACK = false;
   static DEFAILT_CAPACITY = 1 << 4; //default_capacity;
-  table: (Node<K, V> | null)[] = new Array(HashMap.DEFAILT_CAPACITY);
+  table: (Node<K, V> | undefined)[] = new Array(HashMap.DEFAILT_CAPACITY);
   isEmpty(): boolean {
     return this.size == 0;
   }
   clear(): void {
     if (this.size == 0) return;
     for (let index = 0; index < this.table.length; index++) {
-      this.table[index] = null;
+      this.table[index] = undefined;
     }
     this.size = 0;
   }
@@ -57,6 +79,7 @@ export class HashMap<K, V> implements Map<K, V> {
       root = new Node<K, V>(key, value, undefined);
       this.table[index] = root;
       this.afterPut(root);
+      this.size++;
       return;
     } else {
       // 添加新节点到红黑树上面
@@ -64,8 +87,9 @@ export class HashMap<K, V> implements Map<K, V> {
       let node: Node<K, V> | undefined = root;
       let parent!: Node<K, V>;
       let cmp = 0;
+      let h1 = isNullorUndefined(key) ? 0 : hashCode(key);
       while (node) {
-        cmp = this.compare(key, node.key);
+        cmp = this.compare(key, node.key, h1, node.hash);
         parent = node;
         if (cmp > 0) {
           node = node.right;
@@ -89,36 +113,48 @@ export class HashMap<K, V> implements Map<K, V> {
       this.size++;
       return;
     }
-
-    return;
   }
   private index(key: K) {
     if (!key) return 0;
     // 由于js中，对象类型无法拿到内存地址，我们都转化成字符串进行处理；
-    let hash = this.hashCode(JSON.stringify(key));
+    let hash = hashCode(key);
+    // console.log(hash, hash & (this.table.length - 1), this.table.length);
     return hash & (this.table.length - 1);
   }
-  hashCode(str: string) {
-    let hash = 0,
-      i,
-      chr,
-      len;
-    if (str.length === 0) return hash;
-    for (i = 0, len = str.length; i < len; i++) {
-      chr = str.charCodeAt(i);
-      hash = (hash << 5) - hash + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
+  private indexHash(hash: number) {
+    // if (!key) return 0;
+    // // 由于js中，对象类型无法拿到内存地址，我们都转化成字符串进行处理；
+    // let hash = hashCode(key);
+    // console.log(hash, hash & (this.table.length - 1), this.table.length);
+    return hash & (this.table.length - 1);
   }
+
   get(key: K): V | undefined {
-    throw new Error("Method not implemented.");
+    let node = this.findNode(key);
+
+    return node ? node.value : undefined;
   }
-  remove(key: K): V | undefined {
-    throw new Error("Method not implemented.");
+  findNode(key: K): Node<K, V> | undefined {
+    let node = this.table[this.index(key)];
+
+    while (node) {
+      // console.log(key, hashCode(key), node.hash);
+      let val = this.compare(key, node.key, hashCode(key), node.hash);
+      // console.log(val);
+      if (val === 0) return node;
+      if (val > 0) {
+        node = node.right;
+      } else if (val < 0) {
+        node = node.left;
+      }
+    }
+    return node;
   }
+  // remove(key: K): V | undefined {
+  //   throw new Error("Method not implemented.");
+  // }
   containsKey(key: K): boolean {
-    throw new Error("Method not implemented.");
+    return this.findNode(key) !== undefined;
   }
   containsValue(value: V): boolean {
     throw new Error("Method not implemented.");
@@ -260,11 +296,14 @@ export class HashMap<K, V> implements Map<K, V> {
     }
   }
 
-  protected compare(newVal: any, oldVal: any) {
-    // if (this.comparator) {
-    //   return this.comparator(newVal, oldVal);
-    // }
-    // return newVal.compare(oldVal);
+  protected compare(k1: any, k2: any, h1: number, h2: number) {
+    let result = h1 - h2;
+    if (result !== 0) return result;
+
+    if (isEqual(k1, k2)) return 0;
+    // 哈希值相等，但是内容不相同(equals 不相同),没法进行比较了;
+    // 由于js没法获取内存地址，所以我们都往树的右节点存储。
+    return 1;
   }
 
   // 染色操作
@@ -323,11 +362,92 @@ export class HashMap<K, V> implements Map<K, V> {
     } else if (grand.parent && grand.isRightChild()) {
       grand.parent.right = parent;
     } else {
-      this.root = parent;
+      this.table[this.indexHash(grand.hash)] = parent; //grand.hash
     }
     if (child) {
       child.parent = grand;
     }
     grand.parent = parent;
+  }
+
+  public remove(node: Node<K, V>): V;
+  public remove(key: K): V;
+  public remove(node?: Node<K, V> | K): V | undefined {
+    if (node === undefined) return;
+
+    if (node instanceof Node) {
+      let oldvalue = node.value;
+      // 度为2，怎么删除；
+      this.size--;
+      if (node.hasTwoChildren()) {
+        let s = this.successor(node);
+        if (s) {
+          node.value = s.value;
+          node.key = s.key;
+          node = s;
+        }
+      }
+      // 删除node节点, 度为0或1；
+      let replacement = node.left ? node.left : node.right;
+
+      if (replacement) {
+        // 更改parent
+        replacement.parent = node.parent;
+        if (node.parent) {
+          if (node.parent.left === node) {
+            node.parent.left = replacement;
+          } else {
+            node.parent.right = replacement;
+          }
+        } else {
+          this.table[this.indexHash(replacement.hash)] = replacement;
+        }
+      } else {
+        // 度为0的节点
+        if (node.parent) {
+          if (node.parent.left === node) {
+            node.parent.left = undefined;
+          } else {
+            node.parent.right = undefined;
+          }
+        } else {
+          this.table[this.indexHash(node.hash)] = undefined;
+        }
+      }
+      this.afterRemove(node);
+      // console.log("oldNode", oldNode.value);
+      return oldvalue;
+    } else {
+      let targeNode = this.findNode(node);
+
+      if (targeNode) {
+        return this.remove(targeNode);
+      }
+    }
+  }
+
+  //后继节点
+  successor(node: Node<K, V> | null) {
+    if (node === null || !node.right) return null;
+    let current: Node<K, V> = node.right;
+    while (current) {
+      if (current.left) {
+        current = current.left;
+      } else {
+        return current;
+      }
+    }
+  }
+  // 前驱节点
+  predecessor(node: Node<K, V> | null) {
+    if (node === null || !node.left) return null;
+    let current: Node<K, V> = node.left;
+    while (current) {
+      if (current.right) {
+        current = current.right;
+      } else {
+        return current;
+      }
+    }
   }
 }

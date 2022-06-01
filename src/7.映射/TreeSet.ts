@@ -3,7 +3,10 @@ import {Set, Visitor} from "../6.集合/Set";
 import {TreeMap} from "./TreeMap";
 
 export class TreeSet<E> implements Set<E> {
-  map = new TreeMap<E, any>();
+  map = new TreeMap<E, any>((oldkey, newkey) => {
+    // console.log(oldkey, newkey);
+    return oldkey > newkey ? 1 : 0;
+  });
   size(): number {
     return this.map.size;
   }

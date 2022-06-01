@@ -251,10 +251,11 @@ export class TreeMap<K, V> implements Map<K, V> {
   public remove(node: Node<K, V>): V;
   public remove(key: K): V;
   public remove(node?: Node<K, V> | K): V | undefined {
-    if (node === undefined) return;
+    if (!node) return;
     if (node instanceof Node) {
       // 度为2，怎么删除；
-      this._size--;
+      let oldval = node.value;
+      this.size--;
       if (node.hasTwoChildren()) {
         let s = this.successor(node);
         if (s) {
@@ -265,7 +266,7 @@ export class TreeMap<K, V> implements Map<K, V> {
       }
       // 删除node节点, 度为0或1；
       let replacement = node.left ? node.left : node.right;
-      // console.log(replacement?.key);
+      // console.log(replacement?.element);
       if (replacement) {
         // 更改parent
         replacement.parent = node.parent;
@@ -278,22 +279,30 @@ export class TreeMap<K, V> implements Map<K, V> {
         } else {
           this.root = replacement;
         }
+        // 真正被删除的节点
+        this.afterRemove(replacement);
+        // this.afterRemove(node, replacement);
       } else {
         // 度为0的节点
         if (node.parent) {
-          if (node.parent.left === node) {
-            node.parent.left = undefined;
+          let parent = node.parent;
+          if (parent.left === node) {
+            parent.left = undefined;
           } else {
-            node.parent.right = undefined;
+            parent.right = undefined;
           }
+          this.afterRemove(node);
         } else {
           this.root = undefined;
+          this.afterRemove(node);
         }
       }
-      return node.value;
+      // 真正被删除的节点
+      // this.afterRemove(node);
+      return oldval;
     } else {
       let targeNode = this.findNode(node);
-      targeNode && this.remove(targeNode);
+      return targeNode && this.remove(targeNode);
     }
   }
 
