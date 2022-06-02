@@ -16,22 +16,36 @@
 /**
  * @param {TreeNode} root
  */
-var BSTIterator = function(root) {
+var BSTIterator = function (root) {
+  // this.root = root;
+  let arr = [];
+  this.i = 0;
+  inOrder(root);
+  this.arr = arr;
 
+
+
+  function inOrder(root) {
+    root.left && inOrder(root.left);
+    arr.push(root);
+    root.right && inOrder(root.right);
+  }
 };
 
 /**
  * @return {number}
  */
-BSTIterator.prototype.next = function() {
-
+BSTIterator.prototype.next = function () {
+  let node = this.arr[this.i];
+  this.i++;
+  return node.val;
 };
 
 /**
  * @return {boolean}
  */
-BSTIterator.prototype.hasNext = function() {
-
+BSTIterator.prototype.hasNext = function () {
+  return this.i < this.arr.length
 };
 
 /**
@@ -41,4 +55,3 @@ BSTIterator.prototype.hasNext = function() {
  * var param_2 = obj.hasNext()
  */
 // @lc code=end
-
