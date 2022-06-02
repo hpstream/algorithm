@@ -38,9 +38,29 @@ function test3() {
   // hashMap.put(other, 2);
   console.log(hashMap.size);
   console.log(hashMap.remove("1")); //, hashMap.table
+  console.log(hashMap.get("1"));
   // console.log(hashMap.table);
   // console.log(hashMap.size, hashMap.table);
 }
 
+function test4() {
+  var hashMap = new HashMap();
+  var object = 1;
+  var other = 8;
+  hashMap.table = new Array(1);
+  for (let index = 0; index < 6; index++) {
+    hashMap.put(index + "", index);
+  }
+
+  hashMap.traverasal({
+    stop: false,
+    visitor: (k, v) => {
+      console.log(k, v);
+      return false;
+    },
+  });
+}
+
 // test2();
-test3();
+// test3();
+test4();

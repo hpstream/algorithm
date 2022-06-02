@@ -157,10 +157,47 @@ export class HashMap<K, V> implements Map<K, V> {
     return this.findNode(key) !== undefined;
   }
   containsValue(value: V): boolean {
-    throw new Error("Method not implemented.");
+    // throw new Error("Method not implemented.");
+    let list: Node<K, V>[] = [];
+    for (let i = 0; i < this.table.length; i++) {
+      const node = this.table[i] as Node<K, V>;
+      list.push(node);
+
+      while (list.length > 0) {
+        let cNode = list.shift();
+        if (cNode && cNode.value === value) {
+          return true;
+        }
+        if (node.left) {
+          list.push(node.left);
+        }
+
+        if (node.right) {
+          list.push(node.right);
+        }
+      }
+    }
+
+    return false;
   }
-  traverasal(node: Node<K, V> | Visitor<K, V>, visitor?: Visitor<K, V>): void {
-    throw new Error("Method not implemented.");
+  traverasal(visitor: Visitor<K, V>): void {
+    let list: Node<K, V>[] = [];
+    for (let i = 0; i < this.table.length; i++) {
+      const node = this.table[i] as Node<K, V>;
+      list.push(node);
+      while (list.length > 0) {
+        let cNode = list.shift() as Node<K, V>;
+
+        visitor && visitor.visitor(cNode.key, cNode.value);
+        if (cNode.left) {
+          list.push(cNode.left);
+        }
+
+        if (cNode.right) {
+          list.push(cNode.right);
+        }
+      }
+    }
   }
 
   protected afterRemove(node: Node<K, V>): void {
