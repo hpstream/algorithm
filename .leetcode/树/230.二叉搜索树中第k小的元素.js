@@ -18,8 +18,21 @@
  * @param {number} k
  * @return {number}
  */
-var kthSmallest = function(root, k) {
+var kthSmallest = function (root, k) {
+  let val = 0;
+  inOrder(root, (node) => {
+    k--;
+    if (k == 0) {
+      val = node.val;
+      // console.log(val)
+    }
+  })
+  return val;
 
+  function inOrder(root, cb) {
+    root.left && inOrder(root.left, cb);
+    cb && cb(root)
+    root.right && inOrder(root.right, cb)
+  }
 };
 // @lc code=end
-

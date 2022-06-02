@@ -17,8 +17,23 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var getMinimumDifference = function(root) {
+var getMinimumDifference = function (root) {
+  let min = Number.MAX_VALUE;
+  let preNode;
+  inOrder(root, (node) => {
 
+    if (preNode) {
+      min = Math.min(min, node.val - preNode.val)
+    }
+    preNode = node;
+
+  })
+  return min;
+
+  function inOrder(root, cb) {
+    root.left && inOrder(root.left, cb)
+    cb && cb(root)
+    root.right && inOrder(root.right, cb)
+  }
 };
 // @lc code=end
-

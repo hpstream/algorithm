@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode.cn id=450 lang=javascript
+ * @lc app=leetcode.cn id=700 lang=javascript
  *
- * [450] 删除二叉搜索树中的节点
+ * [700] 二叉搜索树中的搜索
  */
 
 // @lc code=start
@@ -15,11 +15,20 @@
  */
 /**
  * @param {TreeNode} root
- * @param {number} key
+ * @param {number} val
  * @return {TreeNode}
  */
-var deleteNode = function(root, key) {
+var searchBST = function (root, val) {
 
+  while (root) {
+
+    if (root.val == val) return root;
+    if (root.val > val) {
+      root = root.left;
+    } else {
+      root = root.right;
+    }
+  }
+  return null;
 };
 // @lc code=end
-

@@ -19,8 +19,21 @@
  * @param {number} high
  * @return {number}
  */
-var rangeSumBST = function(root, low, high) {
+var rangeSumBST = function (root, low, high) {
+  let sum = 0;
+  inOrder(root, (node) => {
+    if (node.val >= low && node.val <= high) {
+      sum += node.val;
+    }
+  })
+  return sum;
 
+  function inOrder(root, cb) {
+
+    root.left && inOrder(root.left, cb);
+    cb && cb(root);
+    root.right && inOrder(root.right, cb);
+
+  }
 };
 // @lc code=end
-
