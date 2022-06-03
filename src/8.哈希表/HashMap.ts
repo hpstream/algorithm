@@ -87,10 +87,9 @@ export class HashMap<K, V> implements Map<K, V> {
       let cNode: Node<K, V> | undefined = root;
       let parent!: Node<K, V>;
       let cmp = 0;
-      let result = 0;
       let k1 = key;
       let h1 = isNullorUndefined(k1) ? 0 : hashCode(k1);
-
+      let searched = false;
       while (cNode) {
         let k2 = cNode.key;
         let h2 = cNode.hash;
@@ -104,20 +103,25 @@ export class HashMap<K, V> implements Map<K, V> {
           if (isEqual(k1, k2)) {
             cmp = 0;
           } else {
-            let result;
-            if (cNode.left) {
-              result = this.node(cNode.left, k1);
-            }
-            if (cNode.right) {
-              result = this.node(cNode.right, k1);
-            }
-            if (result) {
-              // 存在，执行替换操作
-              cNode = result;
-              cmp = 0;
-            } else {
-              // 不存在，执行，添加操作
+            if (searched) {
               cmp = 1;
+            } else {
+              let result;
+              if (cNode.left) {
+                result = this.node(cNode.left, k1);
+              }
+              if (cNode.right) {
+                result = this.node(cNode.right, k1);
+              }
+              if (result) {
+                // 存在，执行替换操作
+                cNode = result;
+                cmp = 0;
+              } else {
+                // 不存在，执行，添加操作
+                searched = true;
+                cmp = 1;
+              }
             }
           }
         }
@@ -178,6 +182,7 @@ export class HashMap<K, V> implements Map<K, V> {
     let cNode: Node<K, V> | undefined = node;
     let h1 = key ? hashCode(key) : 0;
     let result;
+    let search = false;
     while (cNode) {
       let k2 = cNode.key;
       let h2 = cNode.hash;
@@ -190,6 +195,7 @@ export class HashMap<K, V> implements Map<K, V> {
         if (isEqual(key, k2)) return cNode;
 
         // 哈希值相同，内容不相同；
+
         if (cNode.right) {
           result = this.node(cNode.right, key);
         }
