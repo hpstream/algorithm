@@ -84,57 +84,26 @@ export class HashMap<K, V> implements Map<K, V> {
     } else {
       // 添加新节点到红黑树上面
 
-      let cNode: Node<K, V> | undefined = root;
+      let node: Node<K, V> | undefined = root;
       let parent!: Node<K, V>;
       let cmp = 0;
-      let result = 0;
-      let k1 = key;
-      let h1 = isNullorUndefined(k1) ? 0 : hashCode(k1);
-
-      while (cNode) {
-        let k2 = cNode.key;
-        let h2 = cNode.hash;
-        parent = cNode;
-        if (h1 > h2) {
-          cmp = 1;
-        } else if (h1 < h2) {
-          cmp = -1;
-        } else {
-          // 哈希值相等，比较内容，内容相等代表同一个
-          if (isEqual(k1, k2)) {
-            cmp = 0;
-          } else {
-            let result;
-            if (cNode.left) {
-              result = this.node(cNode.left, k1);
-            }
-            if (cNode.right) {
-              result = this.node(cNode.right, k1);
-            }
-            if (result) {
-              // 存在，执行替换操作
-              cNode = result;
-              cmp = 0;
-            } else {
-              // 不存在，执行，添加操作
-              cmp = 1;
-            }
-          }
-        }
-
+      let h1 = isNullorUndefined(key) ? 0 : hashCode(key);
+      while (node) {
+        cmp = this.compare(key, node.key, h1, node.hash);
+        parent = node;
         if (cmp > 0) {
-          cNode = cNode.right;
+          node = node.right;
         } else if (cmp < 0) {
-          cNode = cNode.left;
+          node = node.left;
         } else {
-          let oldval = cNode.value;
-          cNode.key = key;
-          cNode.value = value;
+          let oldval = node.value;
+          node.key = key;
+          node.value = value;
           return oldval;
         }
       }
-      let newNode = new Node<K, V>(k1, value, parent);
-
+      let newNode = new Node<K, V>(key, value, parent);
+      // console.log(parent)
       if (cmp > 0) {
         parent.right = newNode;
       } else {
@@ -167,41 +136,23 @@ export class HashMap<K, V> implements Map<K, V> {
   }
   findNode(key: K): Node<K, V> | undefined {
     let node = this.table[this.index(key)];
-    if (node) {
-      return this.node(node, key);
-    } else {
-      return;
-    }
-    // let h1 = key ? hashCode(key) : 0;
-  }
-  node(node: Node<K, V>, key: K): Node<K, V> | undefined {
-    let cNode: Node<K, V> | undefined = node;
-    let h1 = key ? hashCode(key) : 0;
-    let result;
-    while (cNode) {
-      let k2 = cNode.key;
-      let h2 = cNode.hash;
-      if (h1 > h2) {
-        cNode = cNode.right;
-      } else if (h1 < h2) {
-        cNode = cNode.left;
-      } else {
-        // 哈希值相等，比较内容，内容相等代表同一个
-        if (isEqual(key, k2)) return cNode;
 
-        // 哈希值相同，内容不相同；
-        if (cNode.right) {
-          result = this.node(cNode.right, key);
-        }
-        if (cNode.left) {
-          result = this.node(cNode.left, key);
-        }
-        return result;
+    while (node) {
+      // console.log(key, hashCode(key), node.hash);
+      let val = this.compare(key, node.key, hashCode(key), node.hash);
+      // console.log(val);
+      if (val === 0) return node;
+      if (val > 0) {
+        node = node.right;
+      } else if (val < 0) {
+        node = node.left;
       }
     }
-    return result;
+    return node;
   }
-
+  // remove(key: K): V | undefined {
+  //   throw new Error("Method not implemented.");
+  // }
   containsKey(key: K): boolean {
     return this.findNode(key) !== undefined;
   }
@@ -237,10 +188,10 @@ export class HashMap<K, V> implements Map<K, V> {
       while (list.length > 0) {
         let cNode = list.shift() as Node<K, V>;
 
+        visitor && visitor.visitor(cNode.key, cNode.value);
         if (cNode.left) {
           list.push(cNode.left);
         }
-        visitor && visitor.visitor(cNode.key, cNode.value);
 
         if (cNode.right) {
           list.push(cNode.right);
@@ -380,6 +331,16 @@ export class HashMap<K, V> implements Map<K, V> {
         grand && this.rotateLeft(grand);
       }
     }
+  }
+
+  protected compare(k1: any, k2: any, h1: number, h2: number) {
+    let result = h1 - h2;
+    if (result !== 0) return result;
+
+    if (isEqual(k1, k2)) return 0;
+    // 哈希值相等，但是内容不相同(equals 不相同),没法进行比较了;
+    // 由于js没法获取内存地址，所以我们都往树的右节点存储。
+    return 1;
   }
 
   // 染色操作

@@ -59,6 +59,8 @@ function test4() {
       return false;
     },
   });
+
+  console.log(hashMap.get("5"));
 }
 
 // test2();
