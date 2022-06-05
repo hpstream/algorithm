@@ -80,7 +80,7 @@ export class HashMap<K, V> implements Map<K, V> {
 
     let list: Node<K, V>[] = [];
     for (let i = 0; i < oldTable.length; i++) {
-      const node = this.table[i];
+      const node = oldTable[i];
       if (!node) continue;
       list.push(node);
       while (list.length > 0) {
@@ -98,6 +98,7 @@ export class HashMap<K, V> implements Map<K, V> {
         this.moveNode(cNode);
       }
     }
+    // console.log(this.table);
   }
   moveNode(node: Node<K, V>) {
     let key = node.key;
@@ -113,7 +114,7 @@ export class HashMap<K, V> implements Map<K, V> {
     if (!root) {
       root = node;
       this.table[index] = root;
-      this.afterPut(root);
+      this.fixAfterPut(root);
       return;
     } else {
       // 添加新节点到红黑树上面
@@ -151,8 +152,7 @@ export class HashMap<K, V> implements Map<K, V> {
       }
       newNode.parent = parent;
 
-      this.afterPut(newNode);
-      this.size++;
+      this.fixAfterPut(newNode);
       return;
     }
   }
@@ -163,9 +163,9 @@ export class HashMap<K, V> implements Map<K, V> {
     let index = this.index(key);
     let root = this.table[index];
     if (!root) {
-      root = new Node<K, V>(key, value, undefined);
+      root = this.createNode(key, value, undefined);
       this.table[index] = root;
-      this.afterPut(root);
+      this.fixAfterPut(root);
       this.size++;
       return;
     } else {
@@ -226,17 +226,20 @@ export class HashMap<K, V> implements Map<K, V> {
           return oldval;
         }
       }
-      let newNode = new Node<K, V>(k1, value, parent);
+      let newNode = this.createNode(key, value, parent);
 
       if (cmp > 0) {
         parent.right = newNode;
       } else {
         parent.left = newNode;
       }
-      this.afterPut(newNode);
+      this.fixAfterPut(newNode);
       this.size++;
       return;
     }
+  }
+  createNode(key: K, value: V, parent?: Node<K, V>) {
+    return new Node<K, V>(key, value, parent);
   }
   private index(key: K) {
     if (!key) return 0;
@@ -271,7 +274,6 @@ export class HashMap<K, V> implements Map<K, V> {
     let cNode: Node<K, V> | undefined = node;
     let h1 = key ? hashCode(key) : 0;
     let result;
-    let search = false;
     while (cNode) {
       let k2 = cNode.key;
       let h2 = cNode.hash;
@@ -325,8 +327,9 @@ export class HashMap<K, V> implements Map<K, V> {
   traverasal(visitor: Visitor<K, V>): void {
     let list: Node<K, V>[] = [];
     for (let i = 0; i < this.table.length; i++) {
-      const node = this.table[i] as Node<K, V>;
-      list.push(node);
+      const cNode = this.table[i] as Node<K, V>;
+      // console.log(cNode);
+      cNode && list.push(cNode);
       while (list.length > 0) {
         let cNode = list.shift() as Node<K, V>;
 
@@ -341,8 +344,9 @@ export class HashMap<K, V> implements Map<K, V> {
       }
     }
   }
+  protected afterRemove(willNode: Node<K, V>, removeNode: Node<K, V>) {}
 
-  protected afterRemove(node: Node<K, V>): void {
+  protected fixAfterRemove(node: Node<K, V>): void {
     let cNode = node as Node<K, V>;
     // 如果是红色节点，直接删除
     // if (this.isRed(cNode)) return;
@@ -376,7 +380,7 @@ export class HashMap<K, V> implements Map<K, V> {
         this.black(parent);
         this.red(sibling);
         if (parentBlack) {
-          this.afterRemove(parent);
+          this.fixAfterRemove(parent);
         }
       } else {
         // 兄弟节点至少有一个红色子节点
@@ -407,7 +411,7 @@ export class HashMap<K, V> implements Map<K, V> {
         this.black(parent);
         this.red(sibling);
         if (parentBlack) {
-          this.afterRemove(parent);
+          this.fixAfterRemove(parent);
         }
       } else {
         // 兄弟节点至少有一个红色子节点
@@ -424,7 +428,7 @@ export class HashMap<K, V> implements Map<K, V> {
     }
   }
 
-  protected afterPut(node: Node<K, V>): void {
+  protected fixAfterPut(node: Node<K, V>): void {
     let parent = node.parent as Node<K, V>;
     // 添加的节点是根节点，或者上溢到达了根节点
     if (!parent) {
@@ -441,7 +445,7 @@ export class HashMap<K, V> implements Map<K, V> {
       // 叔父节点是红色【B树节点上溢】
       this.black(parent);
       this.black(uncle);
-      grand && this.afterPut(this.red(grand));
+      grand && this.fixAfterPut(this.red(grand));
       return;
     } else {
       // LL\RR
@@ -546,6 +550,7 @@ export class HashMap<K, V> implements Map<K, V> {
 
     if (node instanceof Node) {
       let oldvalue = node.value;
+      let willNode = node;
       // 度为2，怎么删除；
       this.size--;
       if (node.hasTwoChildren()) {
@@ -584,7 +589,8 @@ export class HashMap<K, V> implements Map<K, V> {
           this.table[this.indexHash(node.hash)] = undefined;
         }
       }
-      this.afterRemove(node);
+      this.fixAfterRemove(node);
+      this.afterRemove(willNode, node);
       // console.log("oldNode", oldNode.value);
       return oldvalue;
     } else {
