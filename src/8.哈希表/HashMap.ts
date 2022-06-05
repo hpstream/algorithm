@@ -106,6 +106,7 @@ export class HashMap<K, V> implements Map<K, V> {
     node.parent = undefined;
     node.left = undefined;
     node.right = undefined;
+    node.color = HashMap.RED;
     // 计算索引
     let index = this.index(key);
     let root = this.table[index];
