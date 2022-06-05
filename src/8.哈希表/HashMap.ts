@@ -466,6 +466,7 @@ export class HashMap<K, V> implements Map<K, V> {
         if (s) {
           node.value = s.value;
           node.key = s.key;
+          node.hash = s.hash;
           node = s;
         }
       }
