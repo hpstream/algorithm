@@ -60,6 +60,7 @@ export class HashMap<K, V> implements Map<K, V> {
   static RED = true;
   static BlACK = false;
   static DEFAILT_CAPACITY = 1 << 4; //default_capacity;
+  static DEFAILT_LOAD_FACTOR = 0.75;
   table: (Node<K, V> | undefined)[] = new Array(HashMap.DEFAILT_CAPACITY);
   isEmpty(): boolean {
     return this.size == 0;
@@ -71,7 +72,92 @@ export class HashMap<K, V> implements Map<K, V> {
     }
     this.size = 0;
   }
+  resize() {
+    if (this.size / this.table.length <= HashMap.DEFAILT_LOAD_FACTOR) return;
+
+    let oldTable = this.table;
+    this.table = new Array(oldTable.length << 1);
+
+    let list: Node<K, V>[] = [];
+    for (let i = 0; i < oldTable.length; i++) {
+      const node = this.table[i];
+      if (!node) continue;
+      list.push(node);
+      while (list.length > 0) {
+        let cNode = list.shift() as Node<K, V>;
+        // 当扩容为原来容量的两倍是，节点的索引有两种情况；
+        // 1. 保存不变
+        // 2. 要不index+旧容量
+        if (cNode.left) {
+          list.push(cNode.left);
+        }
+
+        if (cNode.right) {
+          list.push(cNode.right);
+        }
+        this.moveNode(cNode);
+      }
+    }
+  }
+  moveNode(node: Node<K, V>) {
+    let key = node.key;
+    let value = node.value;
+    // 删除之前的关系
+    node.parent = undefined;
+    node.left = undefined;
+    node.right = undefined;
+    // 计算索引
+    let index = this.index(key);
+    let root = this.table[index];
+    if (!root) {
+      root = node;
+      this.table[index] = root;
+      this.afterPut(root);
+      return;
+    } else {
+      // 添加新节点到红黑树上面
+
+      let cNode: Node<K, V> | undefined = root;
+      let parent!: Node<K, V>;
+      let cmp = 0;
+      let k1 = key;
+      let h1 = isNullorUndefined(k1) ? 0 : hashCode(k1);
+
+      while (cNode) {
+        let k2 = cNode.key;
+        let h2 = cNode.hash;
+        parent = cNode;
+        if (h1 > h2) {
+          cmp = 1;
+        } else if (h1 < h2) {
+          cmp = -1;
+        } else {
+          cmp = Math.random() > 0.5 ? 1 : 0;
+        }
+
+        if (cmp > 0) {
+          cNode = cNode.right;
+        } else if (cmp < 0) {
+          cNode = cNode.left;
+        }
+      }
+      let newNode = node;
+
+      if (cmp > 0) {
+        parent.right = newNode;
+      } else {
+        parent.left = newNode;
+      }
+      newNode.parent = parent;
+
+      this.afterPut(newNode);
+      this.size++;
+      return;
+    }
+  }
   put(key: K, value: V): V | undefined {
+    // 扩容
+    this.resize();
     // 计算索引
     let index = this.index(key);
     let root = this.table[index];
@@ -104,7 +190,8 @@ export class HashMap<K, V> implements Map<K, V> {
             cmp = 0;
           } else {
             if (searched) {
-              cmp = 1;
+              cmp = Math.random() > 0.5 ? 1 : 0;
+              //  cmp = 1;
             } else {
               let result;
               if (cNode.left) {
@@ -120,7 +207,8 @@ export class HashMap<K, V> implements Map<K, V> {
               } else {
                 // 不存在，执行，添加操作
                 searched = true;
-                cmp = 1;
+                cmp = Math.random() > 0.5 ? 1 : 0;
+                // cmp = 1;
               }
             }
           }
@@ -193,9 +281,7 @@ export class HashMap<K, V> implements Map<K, V> {
       } else {
         // 哈希值相等，比较内容，内容相等代表同一个
         if (isEqual(key, k2)) return cNode;
-
         // 哈希值相同，内容不相同；
-
         if (cNode.right) {
           result = this.node(cNode.right, key);
         }
