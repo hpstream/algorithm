@@ -60,8 +60,29 @@ function test5() {
   console.log(heap.toString());
   console.log(`=============`);
 }
+
+function test6() {
+  let data = [1, 2, 4, 5, 6, 7, 8, 9, 10];
+  let heap = new BinaryHeap<number>((o1, o2) => {
+    return o2 - o1;
+  });
+  let k = 5;
+  for (let i = 0; i < data.length; i++) {
+    const element = data[i];
+    if (heap.size < k) {
+      heap.add(element);
+    } else {
+      if (element > (heap.get() as number)) {
+        heap.replace(element);
+      }
+    }
+  }
+  console.log(heap.toString());
+  console.log(`=============`);
+}
 // test1();
 // test2();
 // test3();
 // test4();
-test5();
+// test5();
+test6();
