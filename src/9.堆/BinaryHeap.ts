@@ -4,9 +4,32 @@ import {AbstractHeap, Heap} from "./Heap";
 export class BinaryHeap<E> extends AbstractHeap<E> {
   static DEFAULT_CAPACITY = 10;
   private elements!: (E | undefined)[];
-  constructor(public comparator?: (el: E, e2: E) => number) {
-    super(comparator);
-    this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY);
+  constructor(
+    elements?: E[] | ((el: E, e2: E) => number),
+    comparator?: (el: E, e2: E) => number
+  ) {
+    if (elements) {
+      if (elements instanceof Array) {
+        super(comparator);
+        this.elements = [...elements];
+        this.size = this.elements.length;
+        this.heapify();
+      } else {
+        comparator = elements;
+        super(comparator);
+        this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY);
+      }
+    }
+  }
+  heapify() {
+    // 自上而下的上滤
+    // for (let i = 1; i < this.elements.length; i++) {
+    //   this.siftUp(i);
+    // }
+    // 自下而上的上滤
+    for (let i = (this.size >> 1) - 1; i >= 0; i--) {
+      this.siftDown(i);
+    }
   }
 
   isEmpty(): boolean {
