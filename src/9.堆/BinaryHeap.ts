@@ -1,20 +1,14 @@
+import {extend, size} from "lodash";
 import {Comparator} from "./../5.tree/BinaryTree";
-import {Heap} from "./Heap";
-export class BinaryHeap<E> implements Heap<E> {
+import {AbstractHeap, Heap} from "./Heap";
+export class BinaryHeap<E> extends AbstractHeap<E> {
   static DEFAULT_CAPACITY = 10;
   private elements!: (E | undefined)[];
   constructor(public comparator?: (el: E, e2: E) => number) {
+    super(comparator);
     this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY);
   }
-  size = 0;
 
-  compare(e1: E, e2: E) {
-    if (this.comparator) {
-      return this.comparator(e1, e2);
-    } else {
-      return (e1 as any as number) - (e2 as any as number);
-    }
-  }
   isEmpty(): boolean {
     return this.size == 0;
   }
@@ -22,7 +16,6 @@ export class BinaryHeap<E> implements Heap<E> {
     for (let i = 0; i < this.size; i++) {
       this.elements[i] = undefined;
     }
-
     this.size = 0;
   }
   add(element: E): void {
@@ -31,19 +24,7 @@ export class BinaryHeap<E> implements Heap<E> {
     this.elements[this.size++] = element;
     this.siftUp(this.size - 1);
   }
-  siftUp(index: number) {
-    let element = this.elements[index] as E;
 
-    while (index > 0) {
-      let parentIndex = (index - 1) >> 1;
-      let parent = this.elements[parentIndex] as E;
-      if (this.compare(element, parent) <= 0) break;
-      let tmp = this.elements[index];
-      this.elements[index] = parent;
-      this.elements[parentIndex] = tmp;
-      index = parentIndex;
-    }
-  }
   ensureCapacity(capacity: number) {
     let oldCapacity = this.elements.length;
     if (oldCapacity >= capacity) return;
@@ -56,11 +37,72 @@ export class BinaryHeap<E> implements Heap<E> {
   get(): E | undefined {
     return this.elements[0];
   }
-  remove(): E {
-    throw new Error("Method not implemented.");
+  remove(): E | undefined {
+    let root = this.elements[0];
+    let lastIndex = --this.size;
+    this.elements[0] = this.elements[lastIndex];
+    this.elements[lastIndex] = undefined;
+
+    this.siftDown(0);
+    return root;
   }
-  replace(elemnt: E): E {
-    throw new Error("Method not implemented.");
+  siftDown(index: number) {
+    let element = this.elements[index] as E;
+    // index 必须保证index位置是非叶子结点
+    // 第一个叶子节点的索引 == 非叶子节点的数量
+    // index < 第一个叶子节点的索引
+    let half = this.size >> 1;
+    while (index < half) {
+      // index 节点有两种情况
+      // 两个子节点
+      // 一个子节点
+      let childIndex = (index << 1) + 1;
+      let child = this.elements[childIndex] as E;
+      // 右子节点
+      let rightIndex = childIndex + 1;
+      let rightChild = this.elements[rightIndex] as E;
+      if (rightIndex < this.size && this.compare(rightChild, child) > 0) {
+        childIndex = rightIndex;
+        child = rightChild;
+      }
+      if (this.compare(element, child) >= 0) break;
+      this.elements[index] = child;
+      index = childIndex;
+    }
+    this.elements[index] = element;
+  }
+  siftUp(index: number) {
+    let element = this.elements[index] as E;
+
+    while (index > 0) {
+      let parentIndex = (index - 1) >> 1;
+      let parent = this.elements[parentIndex] as E;
+      if (this.compare(element, parent) <= 0) break;
+      // let tmp = this.elements[index];
+      this.elements[index] = parent;
+      // this.elements[parentIndex] = tmp;
+      index = parentIndex;
+    }
+    this.elements[index] = element;
+  }
+
+  replace(elemnt: E): E | undefined {
+    this.elementNotNullorUndefined(elemnt);
+    let root;
+    if (this.size == 0) {
+      this.elements[0] = elemnt;
+      this.size--;
+    } else {
+      root = this.elements[0];
+      this.elements[0] = elemnt;
+      this.siftDown(0);
+    }
+    return root;
+  }
+  emptyCheck() {
+    if (this.elements.length == 0) {
+      throw new Error("elements must not be empty");
+    }
   }
   elementNotNullorUndefined(s: any) {
     if (s === undefined || s === null) {
