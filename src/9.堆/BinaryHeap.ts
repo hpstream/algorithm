@@ -1,5 +1,4 @@
 import {extend, size} from "lodash";
-import {Comparator} from "./../5.tree/BinaryTree";
 import {AbstractHeap, Heap} from "./Heap";
 export class BinaryHeap<E> extends AbstractHeap<E> {
   static DEFAULT_CAPACITY = 10;
@@ -19,6 +18,9 @@ export class BinaryHeap<E> extends AbstractHeap<E> {
         super(comparator);
         this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY);
       }
+    } else {
+      super(comparator);
+      this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY);
     }
   }
   heapify() {
