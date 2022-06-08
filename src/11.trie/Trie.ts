@@ -111,7 +111,7 @@ export class Trie<V> {
         let parent: Node<V> | undefined;
         while ((parent = node.parent)) {
           parent.children.remove(node.character);
-          if (parent.children.isEmpty()) break;
+          if (parent.word || !parent.children.isEmpty()) break;
           node = parent;
         }
       }
