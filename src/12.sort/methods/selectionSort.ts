@@ -7,7 +7,7 @@ export function selectionSort(array: number[]) {
       }
     }
     let tmp = array[end];
-    array[end] = tmp;
+    array[end] = array[maxIndex];
     array[maxIndex] = tmp;
   }
 }

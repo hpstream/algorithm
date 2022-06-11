@@ -3,7 +3,7 @@ import {Test} from "./utils/times";
 import {copy, random} from "./utils/util";
 
 function test1() {
-  let arr = random(20000, 5000, 100000000);
+  let arr = random(10000, 5000, 100000000);
   let arr1 = copy(arr);
   let arr2 = copy(arr);
   let arr3 = copy(arr);
