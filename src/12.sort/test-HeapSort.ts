@@ -10,6 +10,10 @@ import {InsertionSort} from "./class/InsertionSort";
 import {InsertionSort_1} from "./class/InsertionSort1";
 import {InsertionSort_2} from "./class/InsertionSort2";
 import {MergeSort} from "./class/MergeSort";
+import {QuickSort} from "./class/QuickSort";
+import {ShellSort} from "./class/ShellSort";
+import {CountingSort_1} from "./class/count/CountingSort1";
+import {RadixSort} from "./class/count/RadixSort";
 
 function testSort(array: number[], sorts: any[]) {
   let classArr = [];
@@ -30,16 +34,20 @@ function testSort(array: number[], sorts: any[]) {
   });
 }
 function test1() {
-  let arr = random(10000, 1, 2000000);
+  let arr = random(30000, 1, 30000);
   // let arr = random(10, 1, 200);
   testSort(arr, [
-    MergeSort,
-    InsertionSort_2,
-    InsertionSort_1,
-    InsertionSort,
-    HeapSort,
-    SelectionSort,
-    BubbleSort3,
+    RadixSort,
+    // CountingSort_1,
+    // ShellSort,
+    // QuickSort,
+    // MergeSort,
+    // InsertionSort_2,
+    // InsertionSort_1,
+    // InsertionSort,
+    // HeapSort,
+    // SelectionSort,
+    // BubbleSort3,
     // BubbleSort2,
     // BubbleSort1,
   ]);

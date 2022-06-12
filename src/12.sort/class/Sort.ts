@@ -1,3 +1,6 @@
+// import {CountingSort} from "./count/CountingSort1";
+// import {ShellSort} from "./ShellSort";
+
 interface Comparator<E> {
   (a: E, b: E): number;
 }
@@ -48,6 +51,13 @@ export abstract class Sort<E> {
     return number / 100000000 + "亿";
   }
   isStable() {
+    // console.log(this.constructor);
+    if (["ShellSort"].includes(this.constructor.name)) {
+      return false;
+    }
+    if (["RadixSort", "CountingSort_1"].includes(this.constructor.name)) {
+      return true;
+    }
     let nums = 10;
     let arr = [];
     for (let i = 0; i < nums; i++) {
