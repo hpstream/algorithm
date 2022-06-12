@@ -1,6 +1,6 @@
 import {Sort} from "./Sort";
 
-export class BubbleSort1 extends Sort {
+export class BubbleSort1<E> extends Sort<E> {
   sort(): void {
     let array = this.array;
     for (let end = array.length - 1; end > 0; end--) {

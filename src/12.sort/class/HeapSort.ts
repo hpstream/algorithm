@@ -1,10 +1,10 @@
 import {BinaryHeap} from "./../../9.堆/BinaryHeap";
 
 import {Sort} from "./Sort";
-export class HeapSort extends Sort {
+export class HeapSort<E> extends Sort<E> {
   heapSize = 0;
 
-  sort(): void {
+  sort(arr?: E[]): void {
     // 原地建堆
     //  this.array = [...array];
     this.heapSize = this.array.length;
