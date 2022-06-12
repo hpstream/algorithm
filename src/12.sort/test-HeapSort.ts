@@ -9,6 +9,7 @@ import {copy, isAscOrder, random} from "./utils/util";
 import {InsertionSort} from "./class/InsertionSort";
 import {InsertionSort_1} from "./class/InsertionSort1";
 import {InsertionSort_2} from "./class/InsertionSort2";
+import {MergeSort} from "./class/MergeSort";
 
 function testSort(array: number[], sorts: any[]) {
   let classArr = [];
@@ -30,7 +31,9 @@ function testSort(array: number[], sorts: any[]) {
 }
 function test1() {
   let arr = random(10000, 1, 2000000);
+  // let arr = random(10, 1, 200);
   testSort(arr, [
+    MergeSort,
     InsertionSort_2,
     InsertionSort_1,
     InsertionSort,
