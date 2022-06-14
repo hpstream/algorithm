@@ -4,8 +4,11 @@ import {UnionFind} from "./UF";
 import {UnionFind_QF} from "./UnionFind_QF";
 import {UnionFind_QU} from "./UnionFind_QU";
 import {UnionFind_QU_R} from "./UnionFind_QU_R";
+import {UnionFind_QU_R_PC} from "./UnionFind_QU_R_PC";
+import {UnionFind_QU_R_PH} from "./UnionFind_QU_R_PH";
+import {UnionFind_QU_R_PS} from "./UnionFind_QU_R_PS";
 import {UnionFind_QU_S} from "./UnionFind_QU_S";
-let count = 50000;
+let count = 500000;
 function test1() {
   let uf = new UnionFind_QF(12);
   uf.union(0, 1);
@@ -83,15 +86,21 @@ function testTime(uf: UnionFind) {
   });
 }
 function test3() {
-  test(new UnionFind_QF(12));
-  test(new UnionFind_QU(12));
-  test(new UnionFind_QU_S(12));
-  test(new UnionFind_QU_R(12));
+  // test(new UnionFind_QF(12));
+  // test(new UnionFind_QU(12));
+  // test(new UnionFind_QU_S(12));
+  // test(new UnionFind_QU_R(12));
+  test(new UnionFind_QU_R_PC(12));
+  test(new UnionFind_QU_R_PS(12));
+  test(new UnionFind_QU_R_PH(12));
 
   // testTime(new UnionFind_QF(count));
   // testTime(new UnionFind_QU(count));
   testTime(new UnionFind_QU_S(count));
   testTime(new UnionFind_QU_R(count));
+  testTime(new UnionFind_QU_R_PC(count));
+  testTime(new UnionFind_QU_R_PS(count));
+  testTime(new UnionFind_QU_R_PH(count));
 }
 // test1();
 // test2();

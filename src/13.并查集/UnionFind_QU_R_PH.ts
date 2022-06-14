@@ -1,17 +1,17 @@
 import {UnionFind} from "./UF";
+import {UnionFind_QU_R} from "./UnionFind_QU_R";
 
-export class UnionFind_QU_S extends UnionFind {
-  sizes: number[] = [];
+// 基于rank的优化——find路径压缩 (Path Halving)
+export class UnionFind_QU_R_PH extends UnionFind_QU_R {
+  ranks: number[] = [];
   constructor(capacity: number) {
     super(capacity);
-    for (let i = 0; i < capacity; i++) {
-      this.sizes[i] = 1;
-    }
   }
   // 通过parent链条不断往上找
   public find(v: number) {
     this.rangeCheck(v);
-    while (v != this.parents[v]) {
+    while (this.parents[v] != v) {
+      this.parents[v] = this.parents[this.parents[v]];
       v = this.parents[v];
     }
     return v;
@@ -21,12 +21,13 @@ export class UnionFind_QU_S extends UnionFind {
     let p1 = this.find(v1);
     let p2 = this.find(v2);
     if (p1 === p2) return;
-    if (this.sizes[p1] < this.sizes[p2]) {
+    if (this.ranks[p1] < this.ranks[p2]) {
       this.parents[p1] = p2;
-      this.sizes[p2] += this.sizes[p1];
-    } else {
+    } else if (this.ranks[p1] > this.ranks[p2]) {
       this.parents[p2] = p1;
-      this.sizes[p1] += this.sizes[p2];
+    } else {
+      this.parents[p1] = p2;
+      this.ranks[p2] += p1;
     }
   }
 }

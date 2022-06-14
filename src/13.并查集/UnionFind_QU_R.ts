@@ -6,7 +6,7 @@ export class UnionFind_QU_R extends UnionFind {
   constructor(capacity: number) {
     super(capacity);
     for (let i = 0; i < capacity; i++) {
-      this.ranks[i] = i;
+      this.ranks[i] = 1;
     }
   }
   // 通过parent链条不断往上找
