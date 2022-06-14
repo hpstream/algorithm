@@ -10,6 +10,9 @@ export abstract class UnionFind {
     }
     this.parents = parents;
   }
+  getClassNamge() {
+    return this.constructor.name;
+  }
 
   public abstract find(v: number): number;
   public abstract union(v1: number, v2: number): void;
