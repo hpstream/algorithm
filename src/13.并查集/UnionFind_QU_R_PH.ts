@@ -27,7 +27,7 @@ export class UnionFind_QU_R_PH extends UnionFind_QU_R {
       this.parents[p2] = p1;
     } else {
       this.parents[p1] = p2;
-      this.ranks[p2] += p1;
+      this.ranks[p2] += 1;
     }
   }
 }
