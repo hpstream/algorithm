@@ -1,7 +1,7 @@
 import {UnionFind} from "./UF";
 import {UnionFind_QU_R} from "./UnionFind_QU_R";
 
-// 基于rank的优化——find路径压缩 (Path Halving)
+// 基于rank的优化——find路径减半 (Path Halving)
 export class UnionFind_QU_R_PH extends UnionFind_QU_R {
   ranks: number[] = [];
   constructor(capacity: number) {

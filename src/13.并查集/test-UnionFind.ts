@@ -8,7 +8,7 @@ import {UnionFind_QU_R_PC} from "./UnionFind_QU_R_PC";
 import {UnionFind_QU_R_PH} from "./UnionFind_QU_R_PH";
 import {UnionFind_QU_R_PS} from "./UnionFind_QU_R_PS";
 import {UnionFind_QU_S} from "./UnionFind_QU_S";
-let count = 500000;
+let count = 1000000;
 function test1() {
   let uf = new UnionFind_QF(12);
   uf.union(0, 1);
