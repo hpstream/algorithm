@@ -39,10 +39,10 @@ export class ListGraph<V, E> implements Graph<V, E> {
   addEdge(from: V, to: V): void;
   addEdge(from: V, to: V, weight: E): void;
   addEdge(from: V, to: V, weight?: E): void {
-    let formVertex = this.vertices.get(from);
-    if (!formVertex) {
-      formVertex = new Vertex(from);
-      this.vertices.set(from, formVertex);
+    let fromVertex = this.vertices.get(from);
+    if (!fromVertex) {
+      fromVertex = new Vertex(from);
+      this.vertices.set(from, fromVertex);
     }
 
     let toVertex = this.vertices.get(to);
@@ -50,20 +50,21 @@ export class ListGraph<V, E> implements Graph<V, E> {
       toVertex = new Vertex(to);
       this.vertices.set(to, toVertex);
     }
-    let edge = new Edge(formVertex, toVertex, weight);
+    let edge = new Edge(fromVertex, toVertex, weight);
 
-    let keys = formVertex.outEdges.keys();
+    let keys = fromVertex.outEdges.keys();
     for (let item of keys) {
       if (isSameEdge(item, edge)) {
-        formVertex.outEdges.delete(item);
+        fromVertex.outEdges.delete(item);
         toVertex.inEdges.delete(item);
         this.edges.delete(item);
         break;
       }
     }
-    this.edges.add(edge);
-    formVertex.outEdges.add(edge);
+
+    fromVertex.outEdges.add(edge);
     toVertex.inEdges.add(edge);
+    this.edges.add(edge);
   }
   edgesSize(): number {
     return this.edges.size;
@@ -77,9 +78,56 @@ export class ListGraph<V, E> implements Graph<V, E> {
   }
 
   removeVertex(v: V): void {
-    throw new Error("Method not implemented.");
+    let vertex = this.vertices.get(v);
+    if (!vertex) return;
+
+    for (const edge of [...vertex.outEdges]) {
+      edge.to.inEdges.delete(edge);
+      vertex.outEdges.delete(edge);
+      this.edges.delete(edge);
+    }
+    for (const edge of [...vertex.inEdges]) {
+      edge.from.outEdges.delete(edge);
+      vertex.inEdges.delete(edge);
+      this.edges.delete(edge);
+    }
+
+    this.vertices.delete(v);
   }
   removeEdge(from: V, to: V): void {
-    throw new Error("Method not implemented.");
+    let fromVertex = this.vertices.get(from);
+    if (!fromVertex) return;
+    let toVertex = this.vertices.get(to);
+    if (!toVertex) return;
+    let edge = new Edge(fromVertex, toVertex);
+
+    let keys = fromVertex.outEdges.keys();
+    for (let item of keys) {
+      if (isSameEdge(item, edge)) {
+        fromVertex.outEdges.delete(item);
+        toVertex.inEdges.delete(item);
+        this.edges.delete(item);
+        break;
+      }
+    }
+  }
+  bfs(begin: V, cb: (vertex: Vertex<V, E>) => void) {
+    let beginVertex = this.vertices.get(begin);
+    if (!beginVertex) return;
+
+    let queue = [beginVertex];
+    let visitedVertices = new Set();
+
+    while (queue.length > 0) {
+      let vertex = queue.shift() as Vertex<V, E>;
+      visitedVertices.add(vertex);
+      cb && cb(vertex);
+      // console.log(vertex.value);
+      for (const edge of [...vertex.outEdges]) {
+        if (!visitedVertices.has(edge.to)) {
+          queue.push(edge.to);
+        }
+      }
+    }
   }
 }
