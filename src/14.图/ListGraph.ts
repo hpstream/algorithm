@@ -117,15 +117,15 @@ export class ListGraph<V, E> implements Graph<V, E> {
 
     let queue = [beginVertex];
     let visitedVertices = new Set();
-
+    visitedVertices.add(beginVertex);
     while (queue.length > 0) {
       let vertex = queue.shift() as Vertex<V, E>;
-      visitedVertices.add(vertex);
       cb && cb(vertex);
-      // console.log(vertex.value);
+
       for (const edge of [...vertex.outEdges]) {
         if (!visitedVertices.has(edge.to)) {
           queue.push(edge.to);
+          visitedVertices.add(edge.to);
         }
       }
     }
