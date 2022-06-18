@@ -130,4 +130,5 @@ export class ListGraph<V, E> implements Graph<V, E> {
       }
     }
   }
+  dfs(begin: V, cb: (vertex: Vertex<V, E>) => void) {}
 }

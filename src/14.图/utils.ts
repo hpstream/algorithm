@@ -1,7 +1,7 @@
 import {ListGraph} from "./ListGraph";
-
-export function directedGraph(data: any[][]) {
-  let graph = new ListGraph();
+type GraphData<T, E> = [T, T] | [T, T, E] | [T];
+export function directedGraph<T, E = undefined>(data: any[][]) {
+  let graph = new ListGraph<T, E>();
   for (let i = 0; i < data.length; i++) {
     let edge = data[i];
     if (edge.length == 1) {
@@ -20,8 +20,9 @@ export function directedGraph(data: any[][]) {
  * @param data
  * @return
  */
-export function undirectedGraph(data: any[][]) {
-  let graph = new ListGraph();
+
+export function undirectedGraph<T, E = undefined>(data: any[][]) {
+  let graph = new ListGraph<T, E>();
   for (let i = 0; i < data.length; i++) {
     let edge = data[i];
     if (edge.length == 1) {
