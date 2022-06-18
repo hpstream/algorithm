@@ -1,4 +1,4 @@
-import {BFS_01, BFS_02} from "./data";
+import {BFS_01, BFS_02, DFS_01, DFS_02} from "./data";
 import {ListGraph} from "./ListGraph";
 import {directedGraph, undirectedGraph} from "./utils";
 
@@ -21,6 +21,26 @@ function test2() {
   });
 }
 
-// test1();
+function test3() {
+  let graph = undirectedGraph<number>(DFS_01);
 
-test2();
+  graph.dfs(1, (vertex) => {
+    console.log(vertex.value);
+  });
+}
+
+function test4() {
+  let graph = directedGraph<string>(DFS_02);
+
+  // graph.dfs("a", (vertex) => {
+  //   console.log(vertex.value);
+  // });
+  graph.dfs("c", (vertex) => {
+    console.log(vertex.value);
+  });
+}
+
+// test1();
+// test2();
+test3();
+// test4();

@@ -130,5 +130,64 @@ export class ListGraph<V, E> implements Graph<V, E> {
       }
     }
   }
-  dfs(begin: V, cb: (vertex: Vertex<V, E>) => void) {}
+  dfs(begin: V, cb: (vertex: Vertex<V, E>) => void) {
+    let beginVertex = this.vertices.get(begin);
+    if (!beginVertex) return;
+    let visitedVertices = new Set();
+    let stack = [beginVertex];
+    visitedVertices.add(beginVertex);
+    while (stack.length > 0) {
+      let vertex = stack.pop();
+      if (vertex) {
+        cb(vertex);
+        for (const edge of [...vertex.outEdges]) {
+          if (visitedVertices.has(edge.to)) continue;
+          stack.push(edge.to);
+          visitedVertices.add(edge.to);
+        }
+      }
+    }
+  }
+  dfs2(begin: V, cb: (vertex: Vertex<V, E>) => void) {
+    let beginVertex = this.vertices.get(begin);
+    if (!beginVertex) return;
+    let visitedVertices = new Set();
+    let stack = [beginVertex];
+
+    while (stack.length > 0) {
+      let vertex = stack.pop();
+
+      if (vertex) {
+        for (const edge of [...vertex.outEdges]) {
+          if (visitedVertices.has(edge.to)) continue;
+          // stack.push(edge.from);
+          stack.push(edge.to);
+          visitedVertices.add(edge.to);
+          cb(edge.to);
+          break;
+          // cb(edge.to);
+        }
+      }
+    }
+  }
+
+  dfs1(begin: V, cb: (vertex: Vertex<V, E>) => void) {
+    let beginVertex = this.vertices.get(begin);
+    if (!beginVertex) return;
+    // let visitedVertices = new Set();
+    this.dfsVertex(beginVertex, cb, new Set());
+  }
+
+  dfsVertex(
+    begin: Vertex<V, E>,
+    cb: (vertex: Vertex<V, E>) => void,
+    visitedVertices: Set<Vertex<V, E>>
+  ) {
+    cb(begin);
+    visitedVertices.add(begin);
+    for (const edge of [...begin.outEdges]) {
+      if (visitedVertices.has(edge.to)) continue;
+      this.dfsVertex(edge.to, cb, visitedVertices);
+    }
+  }
 }
