@@ -78,7 +78,7 @@ function test6() {
   // console.log(infos);
 }
 function test7() {
-  let graph = undirectedGraph<string, number>(MST_02);
+  let graph = undirectedGraph<string, number>(MST_01);
   graph.edgeComparator = (e1, e2) => {
     if (e1.weight && e2.weight) {
       return e2.weight - e1.weight;

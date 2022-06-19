@@ -40,6 +40,12 @@ class Edge<V, E> {
   }
 }
 
+export interface WeightManager<E> {
+  compare(el: E, e2: E): number;
+  add(w1: E, w2: E): E;
+  zero?(): E;
+}
+
 class EdgeInfo<V, E> {
   // from!: Vertex<V, E>;
   // to!: Vertex<V, E>;
@@ -51,9 +57,7 @@ export class ListGraph<V, E> implements Graph<V, E> {
   vertices = new Map<V, Vertex<V, E>>();
   edges = new Set<Edge<V, E>>();
 
-  constructor(
-    public edgeComparator?: (el: Edge<V, E>, e2: Edge<V, E>) => number
-  ) {}
+  constructor(public weightManager: WeightManager<E>) {}
   addEdge(from: V, to: V): void;
   addEdge(from: V, to: V, weight: E): void;
   addEdge(from: V, to: V, weight?: E): void {
@@ -173,10 +177,9 @@ export class ListGraph<V, E> implements Graph<V, E> {
     if (!vertex) edgeInfos;
     addedVertices.add(vertex);
 
-    let heap = new PriorityQueue<Edge<V, E>>(
-      [...vertex.outEdges],
-      this.edgeComparator
-    );
+    let heap = new PriorityQueue<Edge<V, E>>([...vertex.outEdges], (e1, e2) => {
+      return this.weightManager.compare(e1.weight as E, e2.weight as E);
+    });
     // let edgeSize = this.vertices.size - 1;
     let verticesSize = this.verticesSize();
     while (!heap.isEmpty() && addedVertices.size < verticesSize) {
@@ -199,10 +202,9 @@ export class ListGraph<V, E> implements Graph<V, E> {
     if (this.vertices.size < 2) return edgeInfos;
     let gUnionFind = new GenericUnionFind();
     // O[E]
-    let heap = new PriorityQueue<Edge<V, E>>(
-      [...this.edges],
-      this.edgeComparator
-    );
+    let heap = new PriorityQueue<Edge<V, E>>([...this.edges], (e1, e2) => {
+      return this.weightManager.compare(e1.weight as E, e2.weight as E);
+    });
     // O[V]
     this.vertices.forEach((vertic, v) => {
       gUnionFind.makeSet(vertic);
@@ -299,5 +301,60 @@ export class ListGraph<V, E> implements Graph<V, E> {
       if (visitedVertices.has(edge.to)) continue;
       this.dfsVertex(edge.to, cb, visitedVertices);
     }
+  }
+
+  // 寻找最短路径
+  shortestPath(begin: V) {
+    let benginVertex = this.vertices.get(begin);
+    let paths = new Map<Vertex<V, E>, E>(); // 等选择的
+    let selectedPath = new Map<V, E>(); // 最终结果
+    if (!benginVertex) return paths;
+    // 初始化paths;
+    for (const edge of [...benginVertex.outEdges]) {
+      paths.set(edge.to, edge.weight as E);
+    }
+
+    while (paths.size > 0) {
+      // 选择最小的
+      let minEntry = this.getShortestPath(paths);
+      let [vertex, weight] = minEntry;
+      // minVertex离开桌面
+
+      selectedPath.set(vertex.value, weight);
+      paths.delete(vertex);
+      // 对vertex松弛操作
+      for (const edge of [...vertex.outEdges]) {
+        //如果edge.to已经离开桌面就不用松弛
+        if (selectedPath.has(edge.to.value)) continue;
+        if (edge.to === benginVertex) continue;
+        // 新的可选路径 beginVertex 到edge.from的最短路径+edge.weight
+        let newWeight = this.weightManager.add(weight, edge.weight as E);
+        // 以前的最短路径 beginVertex到edge.to的最短路径
+        let oldWeight = paths.get(edge.to);
+        if (
+          !oldWeight ||
+          this.weightManager.compare(newWeight, oldWeight) < 0
+        ) {
+          paths.set(edge.to, newWeight);
+        }
+
+        // this.relax();
+      }
+    }
+    return selectedPath;
+  }
+  // relax() {}
+  // 选择最短的路径出来
+  getShortestPath(paths: Map<Vertex<V, E>, E>) {
+    let it = paths.entries();
+    let minEntry = it.next().value as [Vertex<V, E>, E];
+    let res!: IteratorResult<[Vertex<V, E>, E], any>;
+    while ((res = it.next()) && !res.done) {
+      let entry = res.value as [Vertex<V, E>, E];
+      if (this.weightManager.compare(entry[1], minEntry[1]) < 0) {
+        minEntry = entry;
+      }
+    }
+    return minEntry;
   }
 }
