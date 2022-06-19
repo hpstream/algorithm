@@ -13,6 +13,11 @@ export class PriorityQueue<E> {
   isEmpty(): boolean {
     return this.size === 0;
   }
+  addAll(elements: E[]) {
+    for (let i = 0; i < elements.length; i++) {
+      this.enQueue(elements[i]);
+    }
+  }
   clear() {
     this.heap.clear();
   }

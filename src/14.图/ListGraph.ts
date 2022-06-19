@@ -1,4 +1,5 @@
 import {isEqual, isEqualWith} from "lodash";
+import {PriorityQueue} from "../10.优先级队列/PriorityQueue";
 import {Graph} from "./Graph";
 function isSameEdge<V, E>(edge1: Edge<V, E>, edge2: Edge<V, E>) {
   return isEqual(edge1.from, edge2.from) && isEqual(edge1.to, edge2.to);
@@ -27,15 +28,30 @@ class Edge<V, E> {
     public weight?: E
   ) {}
 
+  Info() {
+    return new EdgeInfo(this.from.value, this.to.value, this.weight);
+  }
+
   equals(edge: Edge<V, E>) {
     // 边是否相等，看起点和终点是否相等
     return isEqual(this.from, edge.from) && isEqual(this.to, edge.to);
   }
 }
+
+class EdgeInfo<V, E> {
+  // from!: Vertex<V, E>;
+  // to!: Vertex<V, E>;
+  // weight!: E;
+  constructor(public from: V, public to: V, public weight?: E) {}
+}
 // 邻接表;
 export class ListGraph<V, E> implements Graph<V, E> {
   vertices = new Map<V, Vertex<V, E>>();
   edges = new Set<Edge<V, E>>();
+
+  constructor(
+    public edgeComparator?: (el: Edge<V, E>, e2: Edge<V, E>) => number
+  ) {}
   addEdge(from: V, to: V): void;
   addEdge(from: V, to: V, weight: E): void;
   addEdge(from: V, to: V, weight?: E): void {
@@ -111,6 +127,74 @@ export class ListGraph<V, E> implements Graph<V, E> {
       }
     }
   }
+  //拓扑排序
+  topologicalSort() {
+    let list: V[] = [];
+    let queue: Vertex<V, E>[] = [];
+    let ins = new Map();
+    // 初始化(将度为0的节点都放入队列)
+    this.vertices.forEach((vertex) => {
+      if (vertex.inEdges.size == 0) {
+        queue.unshift(vertex);
+      } else {
+        ins.set(vertex, vertex.inEdges.size);
+      }
+    });
+    while (queue.length > 0) {
+      let vertex = queue.shift();
+
+      if (vertex) {
+        list.push(vertex.value);
+        vertex.outEdges.forEach((edge) => {
+          let toIn = ins.get(edge.to) - 1;
+          if (toIn === 0) {
+            queue.push(edge.to);
+          } else {
+            ins.set(edge.to, toIn);
+          }
+        });
+      }
+    }
+
+    return list;
+  }
+  //最小生成树
+  mst() {
+    return this.prim();
+  }
+
+  prim() {
+    let vertex = this.vertices.values().next().value as Vertex<V, E>;
+    let edgeInfos = new Set<EdgeInfo<V, E>>();
+    let addedVertices = new Set();
+    if (!vertex) edgeInfos;
+    addedVertices.add(vertex);
+
+    let heap = new PriorityQueue<Edge<V, E>>(
+      [...vertex.outEdges],
+      this.edgeComparator
+    );
+    let edgeSize = this.vertices.size - 1;
+    while (!heap.isEmpty() && edgeInfos.size < edgeSize) {
+      let edge = heap.deQueue(); //相当于remove;
+
+      if (edge) {
+        if (addedVertices.has(edge.to)) continue;
+        addedVertices.add(edge.to);
+        edgeInfos.add(edge.Info());
+        heap.addAll([...edge.to.outEdges]);
+      }
+    }
+
+    return edgeInfos;
+  }
+
+  kruskal(): Set<Edge<V, E>> {
+    let set = new Set<Edge<V, E>>();
+
+    return set;
+  }
+
   bfs(begin: V, cb: (vertex: Vertex<V, E>) => void) {
     let beginVertex = this.vertices.get(begin);
     if (!beginVertex) return;
@@ -140,38 +224,39 @@ export class ListGraph<V, E> implements Graph<V, E> {
       let vertex = stack.pop();
       if (vertex) {
         cb(vertex);
+        let edgesArr: Vertex<V, E>[] = [];
         for (const edge of [...vertex.outEdges]) {
           if (visitedVertices.has(edge.to)) continue;
-          stack.push(edge.to);
+          edgesArr.unshift(edge.to);
           visitedVertices.add(edge.to);
         }
+
+        stack.push(...edgesArr);
       }
     }
   }
-  dfs2(begin: V, cb: (vertex: Vertex<V, E>) => void) {
+  dfs1(begin: V, cb: (vertex: Vertex<V, E>) => void) {
     let beginVertex = this.vertices.get(begin);
     if (!beginVertex) return;
     let visitedVertices = new Set();
     let stack = [beginVertex];
-
+    cb(beginVertex);
     while (stack.length > 0) {
       let vertex = stack.pop();
-
       if (vertex) {
         for (const edge of [...vertex.outEdges]) {
           if (visitedVertices.has(edge.to)) continue;
-          // stack.push(edge.from);
+          stack.push(edge.from);
           stack.push(edge.to);
           visitedVertices.add(edge.to);
           cb(edge.to);
           break;
-          // cb(edge.to);
         }
       }
     }
   }
 
-  dfs1(begin: V, cb: (vertex: Vertex<V, E>) => void) {
+  dfs2(begin: V, cb: (vertex: Vertex<V, E>) => void) {
     let beginVertex = this.vertices.get(begin);
     if (!beginVertex) return;
     // let visitedVertices = new Set();

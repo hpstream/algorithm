@@ -55,7 +55,7 @@ export class BinaryHeap<E> extends AbstractHeap<E> {
     if (oldCapacity >= capacity) return;
     let newElements = new Array((oldCapacity + oldCapacity) >> 1);
     for (let i = 0; i < this.size; i++) {
-      newElements[i] = undefined;
+      newElements[i] = this.elements[i];
     }
     this.elements = newElements;
   }
@@ -85,7 +85,9 @@ export class BinaryHeap<E> extends AbstractHeap<E> {
       let child = this.elements[childIndex] as E;
       // 右子节点
       let rightIndex = childIndex + 1;
+
       let rightChild = this.elements[rightIndex] as E;
+
       if (rightIndex < this.size && this.compare(rightChild, child) > 0) {
         childIndex = rightIndex;
         child = rightChild;
@@ -102,6 +104,7 @@ export class BinaryHeap<E> extends AbstractHeap<E> {
     while (index > 0) {
       let parentIndex = (index - 1) >> 1;
       let parent = this.elements[parentIndex] as E;
+
       if (this.compare(element, parent) <= 0) break;
       // let tmp = this.elements[index];
       this.elements[index] = parent;
