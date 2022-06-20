@@ -137,7 +137,7 @@ export class ListGraph<V, E> implements Graph<V, E> {
     // 初始化(将度为0的节点都放入队列)
     this.vertices.forEach((vertex) => {
       if (vertex.inEdges.size == 0) {
-        queue.unshift(vertex);
+        queue.push(vertex);
       } else {
         ins.set(vertex, vertex.inEdges.size);
       }
@@ -149,12 +149,17 @@ export class ListGraph<V, E> implements Graph<V, E> {
         list.push(vertex.value);
         vertex.outEdges.forEach((edge) => {
           let toIn = ins.get(edge.to) - 1;
+          ins.set(edge.to, toIn);
           if (toIn === 0) {
             queue.push(edge.to);
-          } else {
-            ins.set(edge.to, toIn);
           }
         });
+      }
+    }
+    // 代表有环
+    for (const value of ins.values()) {
+      if (value !== 0) {
+        return [];
       }
     }
 

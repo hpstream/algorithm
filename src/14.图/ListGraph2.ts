@@ -176,15 +176,18 @@ export class ListGraph<V, E> implements Graph<V, E> {
         // 以前的最短路径 beginVertex到edge.to的最短路径
         let oldPath = paths.get(edge.to);
         if (
-          !oldPath ||
-          this.weightManager.compare(newWeight, oldPath.weight) < 0
-        ) {
-          let path = new PathInfo<V, E>();
-          path.weight = newWeight;
-          path.edgeInfos.push(...pathinfo.edgeInfos);
-          path.edgeInfos.push(edge.Info());
-          paths.set(edge.to, path);
+          oldPath &&
+          this.weightManager.compare(newWeight, oldPath.weight) > 0
+        )
+          continue;
+        if (!oldPath) {
+          oldPath = new PathInfo<V, E>();
         }
+        // let path = new PathInfo<V, E>();
+        oldPath.weight = newWeight;
+        // pathinfo.edgeInfos.push(...pathinfo.edgeInfos);
+        oldPath.edgeInfos.push(edge.Info());
+        paths.set(edge.to, oldPath);
 
         // this.relax();
       }
