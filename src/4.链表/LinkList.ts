@@ -65,7 +65,7 @@ export class LinkList<T> extends AbstractList<T> {
       this.first = preNode?.next;
     } else {
       let preNode = this.findNode(i - 1);
-      preNode.next = preNode.next?.next;
+      preNode.next = (preNode.next as Node<T>).next;
     }
     this.size--;
     return (preNode as Node<T>).element;
