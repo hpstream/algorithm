@@ -71,4 +71,32 @@ function test1() {
   }
 }
 
-test1();
+function test2() {
+  let graph = directedGraph<string, number>(NEGATIVE_WEIGHT1, {
+    compare(e1, e2) {
+      return e1 - e2;
+    },
+    add(w1, w2) {
+      return w1 + w2;
+    },
+    zero() {
+      return 0;
+    },
+  });
+  let sp = graph.floyd();
+  if (!sp) return;
+  for (const [from, item] of sp) {
+    console.log(`${from}------------`);
+    for (const [key, pathinfo] of item) {
+      // let [key, pathinfo] = it;
+      let arr: string[] = [];
+      pathinfo.edgeInfos.forEach((edge) => {
+        arr.push(`${edge.from}->${edge.to}:weight:${edge.weight}`);
+      });
+      console.log(`${key}:[${arr.join(",")}] weigth:${pathinfo.weight}`);
+    }
+  }
+}
+
+// test1();
+test2();
