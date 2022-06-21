@@ -145,6 +145,57 @@ export class ListGraph<V, E> implements Graph<V, E> {
     return this.bellmanFord(begin);
     return this.dijklstra(begin);
   }
+  // 多源最短路径算法
+  floyd() {
+    let paths = new Map<V, Map<V, PathInfo<V, E>>>();
+
+    for (const edges of [...this.edges]) {
+      let map = paths.get(edges.from.value);
+      if (!map) {
+        map = new Map<V, PathInfo<V, E>>();
+        paths.set(edges.from.value, map);
+      }
+      let pathInfo = new PathInfo<V, E>();
+      pathInfo.weight = edges.weight as E;
+      pathInfo.edgeInfos.push(edges.Info());
+      map.set(edges.to.value, pathInfo);
+    }
+
+    this.vertices.forEach((vertex2, v2) => {
+      this.vertices.forEach((vertex1, v1) => {
+        this.vertices.forEach((vertex3, v3) => {
+          if (v1 == v2 || v2 == v3 || v3 == v1) return;
+          let path12 = this.getPathInfo(v1, v2, paths);
+          if (!path12) return;
+          let path23 = this.getPathInfo(v2, v3, paths);
+          if (!path23) return;
+          let path13 = this.getPathInfo(v1, v3, paths);
+          let newWeight = this.weightManager.add(path12.weight, path23.weight);
+          if (
+            path13 &&
+            this.weightManager.compare(newWeight, path13.weight) >= 0
+          )
+            return;
+
+          if (!path13) {
+            path13 = new PathInfo<V, E>();
+            let tem = paths.get(v1);
+            if (tem) {
+              tem.set(v3, path13);
+            }
+          }
+          path13.weight = newWeight;
+          path13.edgeInfos = [...path12.edgeInfos, ...path23.edgeInfos];
+        });
+      });
+    });
+    return paths;
+  }
+  getPathInfo(from: V, to: V, paths: Map<V, Map<V, PathInfo<V, E>>>) {
+    let tem = paths.get(from);
+    if (tem) return tem.get(to);
+    return;
+  }
   // Bellman-ford;
   bellmanFord(begin: V) {
     let benginVertex = this.vertices.get(begin);

@@ -131,7 +131,32 @@ function test4() {
     console.log(`${key}:[${arr.join(",")}] weigth:${pathinfo.weight}`);
   }
 }
+
+function test5() {
+  let graph = directedGraph<string, number>(SP, {
+    compare(e1, e2) {
+      return e1 - e2;
+    },
+    add(w1, w2) {
+      return w1 + w2;
+    },
+    zero() {
+      return 0;
+    },
+  });
+  let sp = graph.dijklstra("A");
+  if (!sp) return;
+  for (const item of sp) {
+    let [key, pathinfo] = item;
+    let arr: string[] = [];
+    pathinfo.edgeInfos.forEach((edge) => {
+      arr.push(`${edge.from}->${edge.to}:weight:${edge.weight}`);
+    });
+    console.log(`${key}:[${arr.join(",")}] weigth:${pathinfo.weight}`);
+  }
+}
 // test1();
 // test2();
 // test3();
-test4();
+// test4();
+test5();
