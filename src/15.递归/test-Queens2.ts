@@ -1,5 +1,5 @@
 import {Test} from "../12.sort/utils/times";
-import {placeQueens} from "./EightQueens";
+import {placeQueens} from "./Queens2";
 
 let n = 4;
 Test(`${n}皇后`, () => {
