@@ -11,19 +11,34 @@
  */
 var maxSubArray = function (nums) {
   if (nums.length == 0) return 0;
-  let max = Number.MIN_SAFE_INTEGER;
+  return maxSubArray1(nums, 0, nums.length)
+};
 
-  for (let begin = 0; begin < nums.length; begin++) {
-    for (let end = begin; end < nums.length; end++) {
-      let sum = 0;
-      for (let i = begin; i <= end; i++) {
-        sum += nums[i];
-      }
+function maxSubArray1(nums, begin, end) {
 
-      max = Math.max(sum, max);
-    }
+  if (end - begin < 2) return nums[begin];
+
+  let mid = (begin + end) >> 1;
+
+  let leftMax = Number.MIN_SAFE_INTEGER;
+  let leftSum = 0;
+  for (let i = mid - 1; i >= begin; i--) {
+    leftSum += nums[i];
+    leftMax = Math.max(leftSum, leftMax);
+  }
+  let rightMax = Number.MIN_SAFE_INTEGER;
+  let rightSum = 0;
+  for (let i = mid; i < end; i++) {
+    rightSum += nums[i];
+    rightMax = Math.max(rightSum, rightMax);
   }
 
-  return max;
-};
+  let max = leftMax + rightMax;
+
+  return Math.max(
+    max,
+    maxSubArray1(nums, begin, mid),
+    maxSubArray1(nums, mid, end)
+  );
+}
 // @lc code=end
