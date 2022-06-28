@@ -6,38 +6,34 @@
 // dp[i][j]= dp[i-1][j] + nums1[i - 1];
 // dp[i][j]= dp[i][j-1] + nums2[j - 1];
 
-let nums1 = [1, 3, 4, 5, 9, 10];
-let nums2 = [1, 4, 9, 10];
+// let nums1 = [1, 3, 4, 5, 9, 10];
+// let nums2 = [1, 4, 9, 10];
 // "bsbininm";
 // "jmjkbkjkv";
+let nums1 = "bsbininm";
+let nums2 = "jmjkbkjkv";
 console.log(lcs(nums1, nums2));
 // 空间 O(K) K=min{n,m},m,n,是两个序列的长度
 // 空间复杂度，时间复杂度 O(n*m)
 function lcs(nums1: number[] | string, nums2: number[] | string) {
-  let colsNums: string | number[] = nums1,
-    rowsNums: string | number[] = nums2;
+  let dp: number[][] = [];
+  for (let i = 0; i <= nums1.length; i++) {
+    for (let j = 0; j <= nums2.length; j++) {
+      if (!dp[i]) dp[i] = [];
+      if (i == 0 || j == 0) {
+        dp[i][j] = 0;
+        continue;
+      }
 
-  if (nums1.length < nums2.length) {
-    colsNums = nums1;
-    rowsNums = nums2;
-  }
-  let dp: number[] = new Array(colsNums.length + 1).fill(0);
-
-  for (let i = 1; i <= rowsNums.length; i++) {
-    let cur = dp[0];
-
-    for (let j = 1; j <= colsNums.length; j++) {
-      let leftTop = cur;
-      cur = dp[j];
-      if (rowsNums[i - 1] === colsNums[j - 1]) {
-        dp[j] = leftTop + 1;
+      if (nums1[i - 1] === nums2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
       } else {
-        dp[j] = Math.max(dp[j], dp[j - 1]);
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
       }
     }
   }
 
-  return dp[dp.length-1];
+  return dp;
 }
 
 function lcsLoop(
