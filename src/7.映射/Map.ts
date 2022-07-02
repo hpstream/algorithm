@@ -19,17 +19,17 @@ export class Node<K, V> {
   }
 
   isLeftChild() {
-    return this.parent && this === this.parent?.left;
+    return this.parent && this === this.parent.left;
   }
   isRightChild() {
-    return this.parent && this === this.parent?.right;
+    return this.parent && this === this.parent.right;
   }
   sibling() {
     if (this.isLeftChild()) {
-      return this.parent?.right;
+      return this.parent ? this.parent.right : undefined;
     }
     if (this.isRightChild()) {
-      return this.parent?.left;
+      return this.parent ? this.parent.left : undefined;
     }
     // this.parent?.sibling();
 

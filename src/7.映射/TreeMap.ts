@@ -126,6 +126,7 @@ export class TreeMap<K, V> implements Map<K, V> {
 
   get(key: K): V | undefined {
     let node = this.findNode(key);
+
     return node ? node.value : undefined;
   }
   findNode(key: K): Node<K, V> | undefined {
@@ -151,12 +152,12 @@ export class TreeMap<K, V> implements Map<K, V> {
     if (!this.root) return false;
     let queue: Node<K, V>[] = [];
     while (queue.length > 0) {
-      let node = queue.shift();
-      if (node?.value === value) {
+      let node = queue.shift() as Node<K, V>;
+      if (node.value === value) {
         return true;
       }
-      node?.left && queue.push(node.left);
-      node?.right && queue.push(node.right);
+      node.left && queue.push(node.left);
+      node.right && queue.push(node.right);
     }
     return false;
   }
@@ -251,7 +252,7 @@ export class TreeMap<K, V> implements Map<K, V> {
   public remove(node: Node<K, V>): V;
   public remove(key: K): V;
   public remove(node?: Node<K, V> | K): V | undefined {
-    if (!node) return;
+    if (node === undefined || node == null) return;
     if (node instanceof Node) {
       // 度为2，怎么删除；
       let oldval = node.value;
