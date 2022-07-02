@@ -1,3 +1,5 @@
+let arr = [10, 2, 2, 5, 1, 7, 101, 18];
+
 var lengthOfLIS = function (nums: number[]) {
   let dp = [1];
 
@@ -14,3 +16,7 @@ var lengthOfLIS = function (nums: number[]) {
 
   return max;
 };
+
+console.log(lengthOfLIS(arr));
+
+export {};
