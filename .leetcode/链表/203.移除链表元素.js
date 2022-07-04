@@ -17,12 +17,27 @@
  * @param {number} val
  * @return {ListNode}
  */
+
 var removeElements = function (head, val) {
+  //使用虚拟头节点
+  let newHead = new ListNode(0);
+  let newTail = newHead;
+  while (head) {
+    if (head.val != val) {
+      newTail.next = head;
+      newTail = head;
+    }
+    head = head.next;
+  }
+  newTail.next = null;
+  return newHead.next;
+};
+var removeElements1 = function (head, val) {
 
   let newhead = head;
   let pre = null;
   while (head) {
-    let tem = head.next;
+    // let tem = head.next;
     if (head.val === val) {
       if (pre) {
         pre.next = head.next;
@@ -33,7 +48,7 @@ var removeElements = function (head, val) {
       pre = head;
     }
 
-    head = tem;
+    head = head.next;
   }
   return newhead;
 };
