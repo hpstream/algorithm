@@ -17,13 +17,46 @@
  * @return {boolean}
  */
 var isPalindrome = function (head) {
-  if (head == null || head.next == null) return true;
-  if (head.next.next == null) return head.next = head.next.next;
+  if (!head || !head.next) return true;
+  if (!head.next.next) return head.val == head.next.val;
 
   //找到中间节点
+  let mid = middleNode(head);
   //将中间节点的右边部分进行翻转
+  let rHead = reverseList(mid.next);
+  let lHead = head;
 
+  while (rHead) {
+    if (lHead.val != rHead.val) return false;
+    rHead = rHead.next;
+    lHead = lHead.next;
+  }
+  return true;
 
 };
+function middleNode(head) {
+  // 使用快慢指针找结点
+  let slow = head;
+  let fast = head;
+
+  while (fast.next && fast.next.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+  return slow
+
+}
+function reverseList(head) {
+  let newHead = null;
+  while (head) {
+    tem = head.next;
+    head.next = newHead;
+    newHead = head;
+    head = tem;
+  }
+  return newHead
+}
+//[1,2]
+
 // @lc code=end
 
