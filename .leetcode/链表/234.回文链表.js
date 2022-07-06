@@ -25,13 +25,19 @@ var isPalindrome = function (head) {
   //将中间节点的右边部分进行翻转
   let rHead = reverseList(mid.next);
   let lHead = head;
-
+  let rOldHead = rHead;
+  let reuslt = true;
   while (rHead) {
-    if (lHead.val != rHead.val) return false;
+    if (lHead.val != rHead.val) {
+      reuslt = false
+      break;
+    }
     rHead = rHead.next;
     lHead = lHead.next;
   }
-  return true;
+  // 恢复右半部分再次反转
+  reverseList(rOldHead)
+  return reuslt;
 
 };
 function middleNode(head) {
