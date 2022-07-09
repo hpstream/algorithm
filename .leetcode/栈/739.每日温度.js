@@ -9,6 +9,51 @@
  * @param {number[]} temperatures
  * @return {number[]}
  */
+//184 ms 92.7%  82.79%
+var dailyTemperatures = function (temperatures) {
+  let T = temperatures;
+  let values = new Array(T.length).fill(0);
+  for (let i = T.length - 2; i >= 0; i--) {
+    let j = i + 1;
+
+    while (true) {
+      if (T[i] < T[j]) {
+        values[i] = j - i;
+        break;
+      } else if (values[j] == 0) {
+        values[i] = 0;
+        break;
+      }
+      j = j + values[j];
+    }
+  }
+  return values;
+};
+//184 ms 92.7%  82.79%
+var dailyTemperatures3 = function (temperatures) {
+  let T = temperatures;
+  let values = new Array(T.length).fill(0);
+  for (let i = T.length - 2; i >= 0; i--) {
+    let j = i + 1;
+
+    while (true) {
+      if (T[i] < T[j]) {
+        values[i] = j - i;
+        break;
+      } else if (values[j] == 0) {
+        values[i] = 0;
+        break;
+      } else if (T[i] == T[j]) {
+        values[i] = values[j] + j - i;
+        break;
+      } else {
+        j = j + values[j];
+      }
+    }
+  }
+  return values;
+};
+// dailyTemperatures([(89, 62, 70, 58, 47, 47, 46, 76, 100, 70)]);
 //200ms 69.58% 38.2%
 var dailyTemperatures1 = function (temperatures) {
   let stack = [];
@@ -27,7 +72,7 @@ var dailyTemperatures1 = function (temperatures) {
   return result;
 };
 //992ms 26.02% 66.28%
-var dailyTemperatures = function (temperatures) {
+var dailyTemperatures2 = function (temperatures) {
   let answer = [];
   for (let i = 0; i < temperatures.length; i++) {
     let value = temperatures[i];
