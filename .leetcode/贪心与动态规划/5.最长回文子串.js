@@ -9,9 +9,67 @@
  * @param {string} s
  * @return {string}
  */
-// 扩展中心法——优化
+// 马拉车算法
 // 52ms 100% 93.83%
 var longestPalindrome = function (s) {
+  if (s.length <= 1) return s;
+  let oldCs = s.split("");
+  // 预处理
+  let cs = preprocess(oldCs);
+  let m = new Array(cs.length).fill(0);
+
+  let c = 1,
+    r = 1,
+    lastIdx = m.length - 2;
+
+  let maxLen = 0,
+    idx = 0;
+  for (let i = 2; i < lastIdx; i++) {
+    if (r > i) {
+      let li = (c << 1) - i;
+      if (i + m[li] <= r) {
+        m[i] = m[li];
+      } else {
+        m[i] = r - i;
+      }
+    }
+    // 以i为中心，向左右扩展
+    while (cs[i + m[i] + 1] == cs[i - m[i] - 1]) {
+      m[i]++;
+    }
+    // 更新下c,r
+    if (i + m[i] > r) {
+      c = i;
+      r = i + m[i];
+    }
+    // 找出更大的回文子串
+    if (m[i] > maxLen) {
+      maxLen = m[i];
+      idx = i;
+    }
+  }
+  let begin = (idx - maxLen) >> 1;
+
+  return s.slice(begin, begin + maxLen);
+};
+// longestPalindrome("abba");
+function preprocess(oldCs) {
+  let cs = [];
+
+  cs[0] = "^";
+  cs[1] = "#";
+  for (let i = 0; i < oldCs.length; i++) {
+    let idx = (i + 1) << 1;
+    cs[idx] = oldCs[i];
+    cs[idx + 1] = "#";
+  }
+  cs[cs.length] = "$";
+
+  return cs;
+}
+// 扩展中心法——优化
+// 52ms 100% 93.83%
+var longestPalindrome3 = function (s) {
   if (s.length <= 1) return s;
 
   let maxLen = 1;
