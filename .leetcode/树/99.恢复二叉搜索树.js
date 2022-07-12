@@ -17,9 +17,35 @@
  * @param {TreeNode} root
  * @return {void} Do not return anything, modify root in-place instead.
  */
+// 找逆序对
 var recoverTree = function (root) {
+  if (!root) return;
+  let node = [];
+  let first = null,
+    prev = null,
+    second = null;
 
+  findWrongNodes(root);
+  let tme = first.val;
+  first.val = second.val;
+  second.val = tme;
 
+  function findWrongNodes(root) {
+    if (root == null) return;
+    findWrongNodes(root.left);
+    // 出现了逆序对
+    if (prev != null && prev.val > root.val) {
+      // 第2个错误节点：最有一个逆序对中较小的节点
+      second = root;
+      // 第一个错误节点：第一个逆序对中较大的节点
+      if (first != null) return;
+      first = prev;
+    }
+    prev = root;
+    findWrongNodes(root.right);
+  }
+};
+var recoverTree1 = function (root) {
   if (!root) return;
   let node = [];
   let preNode = null;
@@ -32,7 +58,7 @@ var recoverTree = function (root) {
     }
     cNode.prenext = preNode;
     preNode = cNode;
-  })
+  });
   if (node.length === 0) return;
 
   if (node.length === 1) {
