@@ -17,8 +17,35 @@
  * @param {TreeNode} root
  * @return {void} Do not return anything, modify root in-place instead.
  */
-// 找逆序对
+// 二叉树的Morris遍历
+
 var recoverTree = function (root) {
+  let node = root;
+
+  while (node) {
+    if (node.left) {
+      let pred = node.left;
+      while (pred.right && pred.right != node) {
+        pred = pred.right;
+      }
+
+      if (pred.right == null) {
+        pred.right = node;
+        node = node.left;
+      } else {
+        console.log(node.val);
+        pred.right = null;
+        node = node.right;
+      }
+    } else {
+      console.log(node.val);
+      node = node.right;
+    }
+  }
+};
+
+// 找逆序对
+var recoverTree2 = function (root) {
   if (!root) return;
   let node = [];
   let first = null,
