@@ -22,7 +22,7 @@ function test2() {
 }
 
 function test3() {
-  let count = 1000 * 100;
+  let count = 500 * 100;
   let addcount = 1000;
   let arraylist = new ArrayList<number>();
   let linkList = new LinkList<number>();
