@@ -1,9 +1,8 @@
-import {size} from "lodash";
-import {List} from "./List";
-
-export class ArrayList<T> implements List<T> {
+import {AbstractList} from "./List";
+export class ArrayList<T> extends AbstractList<T> {
   private list: T[];
   constructor() {
+    super();
     this.list = [];
   }
 
@@ -11,6 +10,16 @@ export class ArrayList<T> implements List<T> {
     return this.list.length;
   }
 
+  get(i: number): T {
+    this.rangeCheck(i);
+    return this.list[i];
+  }
+  set(i: number, obj: T): T {
+    this.rangeCheck(i);
+    let tem = this.list[i];
+    this.list[i] = obj;
+    return tem;
+  }
   clear(): void {
     this.list = [];
   }
@@ -24,24 +33,36 @@ export class ArrayList<T> implements List<T> {
     if (args.length == 1) {
       this.list.push(args[0]);
     } else {
-      if (args[0] >= this.size) {
-        throw new Error("数组越界");
-      } else {
-        // 1. 使用原声api
-        // this.list.splice(args[0], 0, args[1]);
+      // 判断数组是否越界
+      this.rangeCheck(args[0]);
+      // 1. 使用原声api
+      // this.list.splice(args[0], 0, args[1]);
 
-        // 2. 使用for循环实现
-        for (let i = this.size; i > args[0]; i--) {
-          this.list[i] = this.list[i - 1];
-        }
-        this.list[args[0]] = args[1];
+      // 2. 使用for循环实现
+      for (let i = this.size; i > args[0]; i--) {
+        this.list[i] = this.list[i - 1];
       }
+      this.list[args[0]] = args[1];
     }
   }
-  remove(i: number): T {
-    throw new Error("Method not implemented.");
+
+  remove(index: number): T {
+    this.rangeCheck(index);
+    // return this.list.splice(i, 1)[0];
+
+    let tem = this.list[index];
+    for (let i = index + 1; i < this.size; i++) {
+      this.list[i] = this.list[i - 1];
+    }
+    // 数组长度减小
+    this.list.length = this.list.length - 1;
+
+    return tem;
   }
   indexOf(obj: T): number {
     return this.list.indexOf(obj);
+  }
+  toString() {
+    return `${this.list}`;
   }
 }
