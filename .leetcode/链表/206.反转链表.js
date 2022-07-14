@@ -17,27 +17,25 @@
  * @return {ListNode}
  */
 // 方式二：递归
-var reverseList = function (head) {
-  if (head === null) return null;
-  if (head === null || head.next === null) return head;
-  let newHead = reverseList(head.next);
-  head.next.next = head;
-  head.next = null;
-  return newHead;
-};
+// var reverseList = function (head) {
+//   if (head === null) return null;
+//   if (head === null || head.next === null) return head;
+//   let newHead = reverseList(head.next);
+//   head.next.next = head;
+//   head.next = null;
+//   return newHead;
+// };
 // 方式一： while循环
-/*
+
 var reverseList = function (head) {
   let pre = null;
-
   while (head) {
     let node = head;
     head = head.next;
-
     node.next = pre;
     pre = node;
   }
   return pre;
 };
- */
+
 // @lc code=end

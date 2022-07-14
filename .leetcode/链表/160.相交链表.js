@@ -26,27 +26,22 @@ var getIntersectionNode = function (headA, headB) {
   while (curA != curB) {
     curA = curA == null ? headB : curA.next;
     curB = curB == null ? headA : curB.next;
-
-    // curA = curA.next == null ? headB : curA.next;
-    // curB = curB.next == null ? headA : curB.next;
   }
-  // console.log(curA)
-  return curA
+  return curA;
 };
 //3\n[3]\n[2, 3]\n0\n1
 // 0\n[2, 6, 4]\n[1, 5]\n3\n2
 var getIntersectionNode1 = function (headA, headB) {
   let set = new Set();
   while (headA) {
-    set.add(headA)
+    set.add(headA);
     headA = headA.next;
   }
   while (headB) {
     if (set.has(headB)) {
-      return headB
+      return headB;
     }
     headB = headB.next;
   }
 };
 // @lc code=end
-

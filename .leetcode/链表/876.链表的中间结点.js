@@ -16,7 +16,18 @@
  * @param {ListNode} head
  * @return {ListNode}
  */
+// 快慢指针法
 var middleNode = function (head) {
+  let slow = (fast = head);
+  // let fast = head;
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+  return slow;
+};
+
+var middleNode1 = function (head) {
   let size = 0;
   let newhead = head;
   while (head) {
@@ -24,7 +35,7 @@ var middleNode = function (head) {
     size++;
   }
 
-  var mid = Math.floor(size / 2)
+  var mid = Math.floor(size / 2);
   // console.log(size, mid)
   let i = 0;
   while (newhead) {
@@ -34,6 +45,5 @@ var middleNode = function (head) {
     i++;
     newhead = newhead.next;
   }
-
 };
 // @lc code=end
