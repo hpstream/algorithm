@@ -1,9 +1,9 @@
 import {ArrayList} from "../libs/Array/ArrayList";
-import {LinkList} from "../libs/Array/LinkList";
+import {LinkedList} from "../libs/Array/LinkedList";
 import {Test} from "./utils/times";
 
 function test1() {
-  let linkList = new LinkList<number>();
+  let linkList = new LinkedList<number>();
   for (let i = 0; i < 5; i++) {
     linkList.add(i);
   }
@@ -25,7 +25,7 @@ function test3() {
   let count = 500 * 100;
   let addcount = 1000;
   let arraylist = new ArrayList<number>();
-  let linkList = new LinkList<number>();
+  let linkList = new LinkedList<number>();
   for (let i = 0; i < count; i++) {
     arraylist.add(i);
     linkList.add(i);

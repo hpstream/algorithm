@@ -4,7 +4,7 @@ class Node<T> {
   constructor(public element: T, public next: Node<T> | undefined) {}
 }
 
-export class LinkList<T> extends AbstractList<T> {
+export class LinkedList<T> extends AbstractList<T> {
   first!: Node<T> | undefined;
   size = 0;
   clear(): void {

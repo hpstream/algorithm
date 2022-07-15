@@ -17,7 +17,6 @@ export abstract class AbstractList<T> implements List<T> {
   isEmpty(): boolean {
     return this.size == 0;
   }
-
   outOfBounds(index: number) {
     throw new Error(`Index: ${index}, Size: ${this.size}`);
   }
@@ -26,7 +25,6 @@ export abstract class AbstractList<T> implements List<T> {
       this.outOfBounds(index);
     }
   }
-
   abstract get size(): number;
   abstract clear(): void;
   abstract contains(obj: T): boolean;
