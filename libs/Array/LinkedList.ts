@@ -3,7 +3,6 @@ import {AbstractList} from "./List";
 class Node<T> {
   constructor(public element: T, public next: Node<T> | undefined) {}
 }
-
 export class LinkedList<T> extends AbstractList<T> {
   first!: Node<T> | undefined;
   size = 0;
