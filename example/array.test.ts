@@ -8,7 +8,8 @@ function test1() {
     linkList.add(i);
   }
   console.log(linkList.toString());
-  console.log(linkList.remove(4));
+  // console.log(linkList.remove(4));
+  console.log(linkList.add(2, 10));
   console.log(linkList.toString());
 }
 function test2() {
@@ -22,7 +23,7 @@ function test2() {
 }
 
 function test3() {
-  let count = 500 * 100;
+  let count = 1000 * 100;
   let addcount = 1000;
   let arraylist = new ArrayList<number>();
   let linkList = new LinkedList<number>();
@@ -42,6 +43,6 @@ function test3() {
   });
 }
 
-// test1();
+test1();
 // test2();
-test3();
+// test3();
