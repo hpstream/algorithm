@@ -5,7 +5,7 @@
  *
  * @return  {[type]}     [return description]
  */
-function climbStairs(n: number): number {
+export function climbStairs(n: number): number {
   if (n <= 2) {
     return n;
   }
