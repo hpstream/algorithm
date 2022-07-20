@@ -20,7 +20,23 @@
  */
 
 function hasPathSum(root: TreeNode | null, targetSum: number): boolean {
+  if (!root) return false;
+  let flag = false;
+  dfs(root, targetSum);
+  return flag;
 
-};
+  function dfs(root: TreeNode | null, targetSum: number) {
+    if (flag) return flag;
+    let val = targetSum - root.val;
+
+    if (val === 0 && root.left === null && root.right === null) {
+      flag = true;
+      return flag;
+    }
+
+    root.left && dfs(root.left, val);
+    if (flag) return flag;
+    root.right && dfs(root.right, val);
+  }
+}
 // @lc code=end
-

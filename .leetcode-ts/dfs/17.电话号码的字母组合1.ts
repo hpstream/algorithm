@@ -1,18 +1,13 @@
 /*
- * @lc app=leetcode.cn id=17 lang=javascript
+ * @lc app=leetcode.cn id=17 lang=typescript
  *
  * [17] 电话号码的字母组合
  */
 
 // @lc code=start
-/**
- * @param {string} digits
- * @return {string[]}
- */
-// DFS: 回溯，和减枝
-var letterCombinations = function (digits) {
+function letterCombinations1(digits: string): string[] {
   if (!digits) return [];
-  let list = [];
+  let list: string[] = [];
   const lettersArray = {
     2: "abc",
     3: "def",
@@ -26,13 +21,13 @@ var letterCombinations = function (digits) {
 
   let chars = digits;
 
-  if (chars.length == 0) return;
-  let str = [];
+  if (chars.length == 0) return [];
+  let str: string[] = [];
 
   dfs(0);
   return list;
 
-  function dfs(idx) {
+  function dfs(idx: number) {
     if (idx == chars.length) {
       list.push(str.join(""));
       return;
@@ -44,5 +39,5 @@ var letterCombinations = function (digits) {
       dfs(idx + 1);
     }
   }
-};
+}
 // @lc code=end
