@@ -11,3 +11,16 @@ export interface Queue<T> {
   clear(): void;
   front(): T;
 }
+// DoubleEndedQueue;
+export interface DoubleEndedQueue<T> {
+  get size(): number;
+  isEmpty(): boolean;
+  clear(): void;
+  enQueueRear(e: T): void; // 从队尾入队
+  enQueueFront(e: T): void; //从对头入队
+  deQueueFront(): T; //从队头出队
+  deQueueRear(): T; // 从队尾出队
+
+  front(): T;
+  rear(): T;
+}
