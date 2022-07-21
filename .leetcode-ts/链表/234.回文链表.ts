@@ -1,5 +1,5 @@
 /*
- * @lc app=leetcode.cn id=234 lang=javascript
+ * @lc app=leetcode.cn id=234 lang=typescript
  *
  * [234] 回文链表
  */
@@ -7,16 +7,17 @@
 // @lc code=start
 /**
  * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
  * }
  */
-/**
- * @param {ListNode} head
- * @return {boolean}
- */
-var isPalindrome = function (head) {
+
+function isPalindrome(head: ListNode | null): boolean {
   if (!head || !head.next) return true;
   if (!head.next.next) return head.val == head.next.val;
 
@@ -29,18 +30,18 @@ var isPalindrome = function (head) {
   let reuslt = true;
   while (rHead) {
     if (lHead.val != rHead.val) {
-      reuslt = false
+      reuslt = false;
       break;
     }
     rHead = rHead.next;
     lHead = lHead.next;
   }
   // 恢复右半部分再次反转
-  reverseList(rOldHead)
+  reverseList(rOldHead);
   return reuslt;
+}
 
-};
-function middleNode(head) {
+function middleNode(head: ListNode | null): ListNode | null {
   // 使用快慢指针找结点
   let slow = head;
   let fast = head;
@@ -49,20 +50,16 @@ function middleNode(head) {
     slow = slow.next;
     fast = fast.next.next;
   }
-  return slow
-
+  return slow;
 }
-function reverseList(head) {
-  let newHead = null;
+function reverseList(head: ListNode | null): ListNode | null {
+  let newHead: any = null;
   while (head) {
-    tem = head.next;
+    let tem = head.next;
     head.next = newHead;
     newHead = head;
     head = tem;
   }
-  return newHead
+  return newHead;
 }
-//[1,2]
-
 // @lc code=end
-

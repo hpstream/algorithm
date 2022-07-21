@@ -1,5 +1,5 @@
 /*
- * @lc app=leetcode.cn id=92 lang=javascript
+ * @lc app=leetcode.cn id=92 lang=typescript
  *
  * [92] 反转链表 II
  */
@@ -7,24 +7,26 @@
 // @lc code=start
 /**
  * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
  * }
  */
-/**
- * @param {ListNode} head
- * @param {number} left
- * @param {number} right
- * @return {ListNode}
- */
-var reverseBetween = function (head, left, right) {
 
+function reverseBetween(
+  head: ListNode | null,
+  left: number,
+  right: number
+): ListNode | null {
   let i = 1;
   let preHead = head;
-  let head1 = null;
-  let head2 = null;
-  let head3 = null;
+  let head1: any = null;
+  let head2: any = null;
+  let head3: any = null;
   if (left === right) {
     return head;
   }
@@ -45,7 +47,7 @@ var reverseBetween = function (head, left, right) {
     }
     head = tem;
     i++;
-  };
+  }
   // console.log(head1)
   // console.log(head2)
   // console.log(head3)
@@ -56,7 +58,7 @@ var reverseBetween = function (head, left, right) {
     preHead = head2;
   }
 
-  let pre = null;
+  let pre: any = null;
   while (head2) {
     pre = head2;
     head2 = head2.next;
@@ -64,16 +66,17 @@ var reverseBetween = function (head, left, right) {
   pre.next = head3;
 
   return preHead;
-
 }
-/* 
-var reverseBetween = function (head, left, right) {
 
+function reverseBetween1(
+  head: ListNode | null,
+  left: number,
+  right: number
+): ListNode | null {
   let head1 = head;
-  let head2 = null,
-    head3;
+  let head2: any = null;
   let i = 1;
-  let preHead = null;
+  let preHead: any = null;
   let endHead = null;
   if (left === right) {
     return head;
@@ -90,11 +93,10 @@ var reverseBetween = function (head, left, right) {
       head.next = head2;
       head2 = head;
     } else if (i > right) {
-      // head3 = head;
       break;
     }
     i++;
-    head = tem
+    head = tem;
   }
 
   if (preHead) {
@@ -103,17 +105,14 @@ var reverseBetween = function (head, left, right) {
   } else {
     preHead = head2;
   }
-  let pre = null;
+  let pre: any = null;
   while (head2) {
     pre = head2;
     head2 = head2.next;
   }
   pre.next = head;
 
-  return preHead
+  return preHead;
+}
 
-}; 
-*/
-// [1,2,3,4,5]\n3\n4
-// [3,5]\n1\n2
 // @lc code=end

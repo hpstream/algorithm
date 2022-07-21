@@ -1,17 +1,11 @@
 /*
- * @lc app=leetcode.cn id=704 lang=javascript
+ * @lc app=leetcode.cn id=704 lang=typescript
  *
  * [704] 二分查找
  */
 
 // @lc code=start
-/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number}
- */
-var search = function (nums, target) {
-
+function search(nums: number[], target: number): number {
   let begin = 0;
   let end = nums.length;
 
@@ -27,6 +21,5 @@ var search = function (nums, target) {
     }
   }
   return -1;
-
-};
+}
 // @lc code=end

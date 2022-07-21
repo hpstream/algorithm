@@ -1,5 +1,5 @@
 /*
- * @lc app=leetcode.cn id=147 lang=javascript
+ * @lc app=leetcode.cn id=147 lang=typescript
  *
  * [147] 对链表进行插入排序
  */
@@ -7,18 +7,17 @@
 // @lc code=start
 /**
  * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
  * }
  */
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
 
-// 4,2,1,3
-var insertionSortList = function (head) {
+function insertionSortList(head: ListNode | null): ListNode | null {
   let newHead = new ListNode(0, null);
   // let loopHead = newHead.next;
   while (head) {
@@ -41,5 +40,5 @@ var insertionSortList = function (head) {
   }
 
   return newHead.next;
-};
+}
 // @lc code=end

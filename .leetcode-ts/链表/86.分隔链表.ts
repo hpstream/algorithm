@@ -1,5 +1,5 @@
 /*
- * @lc app=leetcode.cn id=86 lang=javascript
+ * @lc app=leetcode.cn id=86 lang=typescript
  *
  * [86] 分隔链表
  */
@@ -7,18 +7,17 @@
 // @lc code=start
 /**
  * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
  * }
  */
-/**
- * @param {ListNode} head
- * @param {number} x
- * @return {ListNode}
- */
 // 时间复杂度O(n),空间复杂度O(1)
-var partition = function (head, x) {
+function partition(head: ListNode | null, x: number): ListNode | null {
   if (head == null) return null;
   let lHead = new ListNode();
   let lTail = lHead;
@@ -26,13 +25,12 @@ var partition = function (head, x) {
   let rTail = rHead;
 
   while (head) {
-
     if (head.val < x) {
       lTail.next = head;
-      lTail = lTail.next
+      lTail = lTail.next;
     } else {
       rTail.next = head;
-      rTail = rTail.next
+      rTail = rTail.next;
     }
     head = head.next;
   }
@@ -41,6 +39,5 @@ var partition = function (head, x) {
   lTail.next = rHead.next;
 
   return lHead.next;
-};
+}
 // @lc code=end
-

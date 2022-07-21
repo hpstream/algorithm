@@ -1,5 +1,5 @@
 /*
- * @lc app=leetcode.cn id=203 lang=javascript
+ * @lc app=leetcode.cn id=203 lang=typescript
  *
  * [203] 移除链表元素
  */
@@ -7,18 +7,17 @@
 // @lc code=start
 /**
  * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
  * }
  */
-/**
- * @param {ListNode} head
- * @param {number} val
- * @return {ListNode}
- */
 
-var removeElements = function (head, val) {
+function removeElements(head: ListNode | null, val: number): ListNode | null {
   //使用虚拟头节点
   let newHead = new ListNode(0);
   let newTail = newHead;
@@ -31,11 +30,11 @@ var removeElements = function (head, val) {
   }
   newTail.next = null;
   return newHead.next;
-};
-var removeElements1 = function (head, val) {
+}
 
+function removeElements1(head: ListNode | null, val: number): ListNode | null {
   let newhead = head;
-  let pre = null;
+  let pre: any = null;
   while (head) {
     // let tem = head.next;
     if (head.val === val) {
@@ -51,7 +50,5 @@ var removeElements1 = function (head, val) {
     head = head.next;
   }
   return newhead;
-};
-//[7,7,7,7]\n7
-//[]\n1
+}
 // @lc code=end

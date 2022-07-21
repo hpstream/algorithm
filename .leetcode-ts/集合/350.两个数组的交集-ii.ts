@@ -1,18 +1,13 @@
 /*
- * @lc app=leetcode.cn id=350 lang=javascript
+ * @lc app=leetcode.cn id=350 lang=typescript
  *
  * [350] 两个数组的交集 II
  */
 
 // @lc code=start
-/**
- * @param {number[]} nums1
- * @param {number[]} nums2
- * @return {number[]}
- */
-var intersect = function (nums1, nums2) {
+function intersect(nums1: number[], nums2: number[]): number[] {
   let map = {};
-  let res = [];
+  let res: number[] = [];
   for (let i = 0; i < nums1.length; i++) {
     if (!map[nums1[i]]) map[nums1[i]] = 0;
     map[nums1[i]]++;
@@ -24,5 +19,5 @@ var intersect = function (nums1, nums2) {
     }
   }
   return res;
-};
+}
 // @lc code=end
