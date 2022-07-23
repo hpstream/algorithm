@@ -63,4 +63,30 @@ function myPow1(x: number, n: number): number {
   // x = n < 0 ? 1 / x : x;
   return odd ? half * x : half;
 }
+function powMod(x: number, y: number, z: number): number {
+  if (y < 0 || z == 0) return 0;
+  if (y == 0) return 1;
+  let half = powMod(x, y >> 1, z);
+  half *= half;
+  if ((y & 1) == 0) {
+    return half % z;
+  } else {
+    return (half * (x % z)) % z;
+  }
+}
+
+function powMod1(x: number, y: number, z: number): number {
+  if (y < 0 || z == 0) return 0;
+  let res = 1 % z;
+  x %= z;
+
+  while (y > 0) {
+    if ((y & 1) == 1) {
+      res = (res * x) % z;
+    }
+    x = (x * x) % z;
+    y >>= 1;
+  }
+  return res % z;
+}
 // @lc code=end
