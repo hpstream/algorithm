@@ -40,7 +40,7 @@ export class BinaryHeap<E> implements Heap<E> {
   add(element: E): void {
     this.elementNotNullorUndefined(element);
     this.ensureCapacity(this.size + 1);
-    this.elements[this.size++] = element;
+    this.elements[this.elements.length] = element;
     this.siftUp(this.size - 1);
   }
 
@@ -58,9 +58,10 @@ export class BinaryHeap<E> implements Heap<E> {
   }
   remove(): E | undefined {
     let root = this.elements[0];
-    let lastIndex = --this.size;
+    let lastIndex = this.elements.length - 1;
     this.elements[0] = this.elements[lastIndex];
-    this.elements[lastIndex] = undefined;
+    // this.elements[lastIndex] = undefined;
+    this.elements.length = this.elements.length - 1;
 
     this.siftDown(0);
     return root;
@@ -113,7 +114,7 @@ export class BinaryHeap<E> implements Heap<E> {
     let root;
     if (this.size == 0) {
       this.elements[0] = elemnt;
-      this.size--;
+      this.elements.length = this.elements.length - 1;
     } else {
       root = this.elements[0];
       this.elements[0] = elemnt;

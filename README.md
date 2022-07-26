@@ -38,8 +38,8 @@
 - [ ] 基于tree实现映射(TreeMap)
 - [ ] 基于LinkedList实现HashMap
 - [ ] 基于LinkedList实现HashSet
-- [ ] 二叉堆(BinaryHeap)
-- [ ] 优先级队列(PriorityQueue)
+- [x] 二叉堆(BinaryHeap)
+- [x] 优先级队列(PriorityQueue)
 - [ ] 字典树(Trie)
 - [ ] 基于Quick Find实现的并查集
 - [ ] 基于Quick Union实现的并查集
