@@ -5,8 +5,5 @@
  */
 
 // @lc code=start
-function findNumberOfLIS(nums: number[]): number {
-
-};
+function findNumberOfLIS(nums: number[]): number {}
 // @lc code=end
-
