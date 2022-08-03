@@ -1,6 +1,8 @@
-import {BinaryHeap} from "./../../9.堆/BinaryHeap";
+import { BinaryHeap } from "./../../9.堆/BinaryHeap";
 
-import {Sort} from "./Sort";
+import { Sort } from "./Sort";
+
+
 export class HeapSort<E> extends Sort<E> {
   heapSize = 0;
 
@@ -34,6 +36,7 @@ export class HeapSort<E> extends Sort<E> {
       // 右子节点
       let rightIndex = childIndex + 1;
       let rightChild = this.array[rightIndex];
+      // 找到左右节点中较大的一个
       if (
         rightIndex < this.heapSize &&
         this.cmpElement(rightChild, child) > 0
@@ -48,3 +51,5 @@ export class HeapSort<E> extends Sort<E> {
     this.array[index] = element;
   }
 }
+
+

@@ -1,4 +1,4 @@
-import {Sort} from "./Sort";
+import { Sort } from "./Sort";
 export class MergeSort<E> extends Sort<E> {
   sort(...args: [] | [begin: number, end: number]) {
     if (args.length === 0) {
@@ -19,7 +19,7 @@ export class MergeSort<E> extends Sort<E> {
     let ri = mid;
     let re = end;
     let ai = begin;
-    let leftArray = [];
+    let leftArray: E[] = [];
     for (let i = li; i < le; i++) {
       leftArray[i] = this.array[begin + i];
     }
