@@ -1,4 +1,4 @@
-import {BinaryHeap} from "../../src/9.堆/BinaryHeap";
+import { BinaryHeap } from "../../src/9.堆/BinaryHeap";
 /**
  * 
 题目
@@ -40,6 +40,7 @@ function minMeetings(intervals: number[][]) {
     endIndx = 0;
 
   for (const begin of begins) {
+    // 开始时间大于结束时间，表示有一个会议室释放了
     if (begin >= ends[endIndx]) {
       endIndx++;
     } else {
